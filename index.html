@@ -1,0 +1,718 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Yangfan Wen — Portfolio</title>
+<meta name="description" content="Yangfan Wen — Game Interaction Designer. MA Games Design, University of the Arts London.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400&family=DM+Sans:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500&family=Noto+Serif+SC:wght@400;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  /* palette — from reference image */
+  --black-sheep:#0F0D0D;
+  --carbon:#2F2F2E;
+  --swamp:#3B2715;
+  --moose:#715640;
+  --sycamore:#9B8B77;
+  --gold:#B9A88F;
+  --gold-hi:#DDD2C2;
+
+  --bg:var(--black-sheep);
+  --bg-2:#151312;
+  --surface:#1B1918;
+  --line:rgba(155,139,119,.18);
+  --text:#ECEAE6;
+  --muted:#9B8B77;
+  --dim:#67615a;
+
+  --serif:"Cormorant Garamond","Noto Serif SC",Georgia,serif;
+  --sans:"DM Sans","Noto Serif SC",system-ui,sans-serif;
+  --mono:"JetBrains Mono",ui-monospace,monospace;
+  --ease:cubic-bezier(.2,.7,.1,1);
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth;-webkit-text-size-adjust:100%}
+body{background:var(--bg);color:var(--text);font-family:var(--sans);font-weight:300;line-height:1.65;overflow-x:hidden;-webkit-font-smoothing:antialiased}
+html[lang="zh"] body{font-family:"Noto Serif SC",var(--sans)}
+a{color:inherit;text-decoration:none}
+img{max-width:100%;display:block}
+::selection{background:var(--gold);color:var(--black-sheep)}
+
+/* grain */
+body::after{content:"";position:fixed;inset:0;pointer-events:none;z-index:200;opacity:.06;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E")}
+
+.mono{font-family:var(--mono);font-size:11px;letter-spacing:.18em;text-transform:uppercase}
+.wrap{max-width:1180px;margin:0 auto;padding:0 32px}
+@media (max-width:640px){.wrap{padding:0 16px}}
+
+/* ============ LOADER ============ */
+#loader{position:fixed;inset:0;z-index:100;background:var(--bg);display:flex;flex-direction:column;justify-content:center;transition:opacity .9s var(--ease),visibility .9s}
+#loader.done{opacity:0;visibility:hidden}
+.ld-top{position:absolute;top:36px;left:40px;right:40px;display:flex;justify-content:space-between;align-items:center}
+.logo{display:flex;align-items:center;gap:10px;font-family:var(--serif);font-size:20px;letter-spacing:.06em}
+.logo-mark{width:30px;height:30px;border:1px solid var(--gold);display:grid;place-items:center;font-family:var(--serif);font-size:15px;color:var(--gold);transform:rotate(45deg)}
+.logo-mark span{transform:rotate(-45deg)}
+.ld-pct{font-family:var(--mono);font-size:12px;color:var(--gold)}
+.ld-body{display:grid;grid-template-columns:1fr auto 1fr;align-items:center;gap:24px;padding:0 40px}
+.ld-list{display:flex;flex-direction:column;gap:6px}
+.ld-list.r{align-items:flex-end;text-align:right}
+.ld-list .mono{color:var(--dim);transition:color .4s}
+.ld-list .mono.on{color:var(--gold-hi)}
+.ld-list .cap{color:var(--moose);font-size:9px;margin-bottom:6px}
+#ldGlobe{width:min(46vw,440px);height:min(46vw,440px)}
+.ld-bottom{position:absolute;bottom:56px;left:0;right:0;display:flex;flex-direction:column;align-items:center;gap:18px}
+.ld-bar{width:180px;height:1px;background:var(--line);position:relative;overflow:hidden}
+.ld-bar i{position:absolute;inset:0;background:var(--gold);transform-origin:left;transform:scaleX(0)}
+.ld-choose{display:flex;gap:14px;opacity:0;transform:translateY(8px);transition:.6s var(--ease);pointer-events:none}
+.ld-choose.show{opacity:1;transform:none;pointer-events:auto}
+.btn{display:inline-flex;align-items:center;gap:10px;padding:12px 26px;border:1px solid var(--line);border-radius:999px;font-size:14px;color:var(--text);background:transparent;cursor:pointer;font-family:var(--sans);transition:.35s var(--ease)}
+.btn:hover{border-color:var(--gold);color:var(--gold-hi)}
+.btn.solid{background:var(--gold);border-color:var(--gold);color:var(--black-sheep);font-weight:500}
+.btn.solid:hover{background:var(--gold-hi);color:var(--black-sheep)}
+@media (max-width:760px){
+  .ld-body{grid-template-columns:1fr;justify-items:center}
+  .ld-list{display:none}
+  #ldGlobe{width:78vw;height:78vw}
+  .ld-top{left:16px;right:16px}
+}
+
+/* ============ NAV ============ */
+nav{position:fixed;top:16px;left:50%;transform:translateX(-50%);z-index:50;width:min(1180px,calc(100% - 32px));
+  display:flex;align-items:center;justify-content:space-between;padding:10px 14px 10px 20px;border:1px solid var(--line);border-radius:999px;
+  background:rgba(15,13,13,.55);backdrop-filter:blur(18px) saturate(140%);-webkit-backdrop-filter:blur(18px) saturate(140%)}
+nav .logo{font-size:18px}
+nav .logo-mark{width:24px;height:24px;font-size:12px}
+.nav-links{display:flex;gap:6px}
+.nav-links a{font-size:13px;color:var(--muted);padding:6px 12px;border-radius:999px;position:relative;transition:color .3s}
+.nav-links a:hover,.nav-links a.active{color:var(--gold-hi)}
+.nav-links a.active::after{content:"";position:absolute;left:12px;right:12px;bottom:2px;height:1px;background:var(--gold)}
+.lang{font-family:var(--mono);font-size:11px;letter-spacing:.1em;border:1px solid var(--line);border-radius:999px;padding:6px 12px;background:none;color:var(--text);cursor:pointer}
+.lang:hover{border-color:var(--gold);color:var(--gold-hi)}
+@media (max-width:760px){.nav-links{display:none}}
+
+/* ============ HERO ============ */
+.hero{min-height:100vh;min-height:100svh;position:relative;display:flex;align-items:center;overflow:hidden}
+.hero::before{content:"";position:absolute;inset:0;background:radial-gradient(60% 70% at 78% 50%,rgba(113,86,64,.14),transparent 70%),radial-gradient(40% 40% at 10% 90%,rgba(59,39,21,.28),transparent 70%)}
+#heroGlobe{position:absolute;right:-8vw;top:50%;transform:translateY(-50%);width:min(64vw,820px);height:min(64vw,820px);opacity:.95}
+.hero-inner{position:relative;z-index:2;display:grid;grid-template-columns:auto 1fr;gap:40px;align-items:center;width:100%}
+.portrait{width:170px;aspect-ratio:3/4;border-radius:14px;border:1px solid var(--line);background:linear-gradient(160deg,var(--carbon),var(--swamp));position:relative;overflow:hidden;display:grid;place-items:center}
+.portrait img{width:100%;height:100%;object-fit:cover;object-position:50% 20%;filter:saturate(.95) contrast(1.02);transition:filter .8s var(--ease)}
+.portrait:hover img{filter:saturate(1.05) brightness(1.03)}
+.portrait .ph{font-family:var(--mono);font-size:10px;color:var(--sycamore);letter-spacing:.15em;text-align:center}
+.portrait::after{content:"";position:absolute;inset:6px;border:1px solid rgba(185,168,143,.25);border-radius:10px;pointer-events:none}
+.eyebrow{color:var(--gold);margin-bottom:18px;display:flex;align-items:center;gap:12px}
+.eyebrow::before{content:"";width:32px;height:1px;background:var(--gold)}
+h1{font-family:var(--serif);font-weight:400;font-size:clamp(56px,9vw,128px);line-height:.92;letter-spacing:-.01em}
+h1 em{font-style:italic;color:var(--gold-hi)}
+.hero-role{font-size:clamp(16px,1.6vw,19px);color:var(--muted);margin-top:22px;max-width:520px}
+.hero-cta{display:flex;gap:12px;margin-top:34px;flex-wrap:wrap;align-items:center}
+.icon-btn{width:44px;height:44px;border-radius:50%;border:1px solid var(--line);display:grid;place-items:center;transition:.3s}
+.icon-btn:hover{border-color:var(--gold);color:var(--gold-hi)}
+.icon-btn svg{width:17px;height:17px}
+.quote{margin-top:44px;font-family:var(--serif);font-style:italic;font-size:17px;color:var(--sycamore);max-width:440px;border-left:1px solid var(--moose);padding-left:16px}
+.scroll-hint{position:absolute;bottom:32px;left:50%;transform:translateX(-50%);color:var(--dim);display:flex;flex-direction:column;align-items:center;gap:10px;z-index:2}
+.scroll-hint i{width:1px;height:40px;background:linear-gradient(var(--gold),transparent);animation:drip 2.2s infinite}
+@keyframes drip{0%{transform:scaleY(0);transform-origin:top}50%{transform:scaleY(1);transform-origin:top}51%{transform-origin:bottom}100%{transform:scaleY(0);transform-origin:bottom}}
+@media (max-width:760px){
+  .hero-inner{grid-template-columns:1fr;gap:28px;padding-top:90px}
+  .portrait{width:120px}
+  .scroll-hint{display:none}
+  .hero{padding-bottom:60px}
+  #heroGlobe{right:-40vw;width:120vw;height:120vw;opacity:.45}
+}
+
+/* ============ SECTIONS ============ */
+section{position:relative}
+.sec{padding:140px 0}
+.sec-head{display:flex;align-items:baseline;justify-content:space-between;gap:24px;margin-bottom:72px;border-bottom:1px solid var(--line);padding-bottom:22px}
+.sec-head h2{font-family:var(--serif);font-weight:400;font-size:clamp(40px,5.5vw,72px);line-height:1}
+.sec-head h2 em{font-style:italic;color:var(--gold-hi)}
+.sec-head .mono{color:var(--muted)}
+.reveal{opacity:0;transform:translateY(28px);transition:opacity .7s var(--ease),transform .7s var(--ease)}
+.reveal.in{opacity:1;transform:none}
+
+/* ---- Education ---- */
+.edu{display:grid;grid-template-columns:1fr 1fr;gap:1px;background:var(--line);border:1px solid var(--line);border-radius:18px;overflow:hidden}
+.edu-card{background:var(--bg);padding:44px 40px;position:relative;overflow:hidden;min-height:340px;display:flex;flex-direction:column}
+.edu-card .big{position:absolute;right:-10px;bottom:-40px;font-family:var(--serif);font-size:220px;line-height:1;color:transparent;-webkit-text-stroke:1px rgba(185,168,143,.16);pointer-events:none}
+.edu-card .when{color:var(--gold)}
+.edu-card h3{font-family:var(--serif);font-weight:500;font-size:32px;line-height:1.1;margin:18px 0 6px}
+.edu-card .deg{color:var(--text);font-size:16px}
+.edu-card .where{color:var(--muted);font-size:13px;margin-top:2px}
+.edu-card .course{margin-top:auto;padding-top:28px;font-size:14px;color:var(--sycamore)}
+.edu-card .course b{display:block;font-family:var(--mono);font-weight:400;font-size:10px;letter-spacing:.18em;text-transform:uppercase;color:var(--dim);margin-bottom:8px}
+@media (max-width:760px){.edu{grid-template-columns:1fr}.edu-card{padding:32px 24px}}
+
+/* ---- Experience ---- */
+.xp{display:grid;grid-template-columns:280px 1fr;gap:64px;padding:64px 0;border-top:1px solid var(--line)}
+.xp:first-of-type{border-top:0;padding-top:0}
+.xp-side{position:sticky;top:110px;align-self:start}
+.xp-idx{font-family:var(--serif);font-size:84px;line-height:1;color:transparent;-webkit-text-stroke:1px var(--gold)}
+.xp-co{font-family:var(--serif);font-size:30px;margin-top:14px}
+.xp-game{color:var(--gold-hi);font-style:italic;font-family:var(--serif);font-size:20px}
+.xp-meta{margin-top:18px;display:flex;flex-direction:column;gap:4px;color:var(--muted)}
+.xp-role{font-size:20px;margin-bottom:28px;color:var(--text);font-weight:400}
+.xp-items{display:grid;gap:14px}
+.xp-item{display:grid;grid-template-columns:200px 1fr;gap:24px;padding:24px 26px;background:var(--bg-2);border:1px solid var(--line);border-radius:14px;transition:.4s var(--ease)}
+.xp-item:hover{border-color:rgba(185,168,143,.45);background:linear-gradient(120deg,rgba(59,39,21,.35),var(--bg-2))}
+.xp-item h4{font-family:var(--mono);font-weight:400;font-size:11px;letter-spacing:.16em;text-transform:uppercase;color:var(--gold);padding-top:4px}
+.xp-item p{font-size:15px;color:#cdc9c3}
+@media (max-width:900px){
+  .xp{grid-template-columns:1fr;gap:28px}
+  .xp-side{position:static}
+  .xp-item{grid-template-columns:1fr;gap:8px;padding:20px}
+}
+
+/* ---- Work ---- */
+.work-grid{display:grid;grid-template-columns:repeat(6,1fr);gap:18px}
+.work{grid-column:span 3;border:1px solid var(--line);border-radius:18px;overflow:hidden;background:var(--bg-2);display:flex;flex-direction:column;transition:.5s var(--ease);position:relative}
+.work.wide{grid-column:span 6}
+.work.third{grid-column:span 2}
+.work:hover{border-color:rgba(185,168,143,.5);transform:translateY(-4px)}
+.work-img{aspect-ratio:16/10;background:linear-gradient(135deg,var(--swamp),var(--carbon) 60%,var(--black-sheep));position:relative;overflow:hidden;display:grid;place-items:center}
+.work.wide .work-img{aspect-ratio:21/8}
+.work-img img{width:100%;height:100%;object-fit:cover;transition:transform 1.2s var(--ease)}
+.work:hover .work-img img{transform:scale(1.04)}
+.work-img .ph{font-family:var(--mono);font-size:10px;letter-spacing:.2em;color:var(--sycamore);opacity:.7}
+.work-img svg.deco{position:absolute;inset:0;width:100%;height:100%;opacity:.5}
+.work-body{padding:22px 24px 26px;display:flex;flex-direction:column;gap:8px}
+.work-tags{display:flex;gap:8px;flex-wrap:wrap}
+.tag{font-family:var(--mono);font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:var(--sycamore);border:1px solid var(--line);border-radius:999px;padding:3px 10px}
+.work h3{font-family:var(--serif);font-weight:500;font-size:26px;line-height:1.15}
+.work p{font-size:14px;color:var(--muted)}
+.work .arrow{position:absolute;top:16px;right:16px;width:36px;height:36px;border-radius:50%;background:rgba(15,13,13,.6);border:1px solid var(--line);display:grid;place-items:center;color:var(--gold-hi);opacity:0;transform:translate(-6px,6px);transition:.4s var(--ease);z-index:2}
+.work:hover .arrow{opacity:1;transform:none}
+@media (max-width:900px){.work,.work.third{grid-column:span 6}.work.wide .work-img{aspect-ratio:16/10}}
+
+/* ---- Skills ---- */
+.skills{display:grid;grid-template-columns:repeat(3,1fr);gap:18px}
+.sk{border:1px solid var(--line);border-radius:18px;padding:30px 28px;background:var(--bg-2)}
+.sk h3{font-family:var(--serif);font-weight:500;font-size:24px;margin-bottom:6px}
+.sk .mono{color:var(--gold);display:block;margin-bottom:22px}
+.chips{display:flex;flex-wrap:wrap;gap:8px}
+.chip{font-size:13px;padding:7px 14px;border-radius:999px;border:1px solid var(--line);color:#d6d2cc;transition:.3s}
+.chip:hover{border-color:var(--gold);color:var(--gold-hi);background:rgba(185,168,143,.06)}
+.chip.key{border-color:rgba(185,168,143,.5);color:var(--gold-hi)}
+@media (max-width:900px){.skills{grid-template-columns:1fr}}
+
+/* ---- Beyond ---- */
+.beyond{display:grid;grid-template-columns:repeat(4,1fr);gap:1px;background:var(--line);border:1px solid var(--line);border-radius:18px;overflow:hidden;margin-top:18px}
+.by{background:var(--bg);padding:28px 24px}
+.by .n{font-family:var(--serif);font-size:40px;color:var(--gold-hi);line-height:1}
+.by h4{font-weight:400;font-size:15px;margin-top:10px}
+.by p{font-size:13px;color:var(--muted);margin-top:6px}
+@media (max-width:900px){.beyond{grid-template-columns:1fr 1fr}}
+
+/* ---- Contact ---- */
+.contact{padding:160px 0 60px;text-align:center;position:relative;overflow:hidden}
+.contact::before{content:"";position:absolute;left:50%;top:40%;width:900px;height:900px;transform:translate(-50%,-50%);background:radial-gradient(closest-side,rgba(113,86,64,.15),transparent);pointer-events:none}
+.contact .mono{color:var(--gold)}
+.contact h2{font-family:var(--serif);font-weight:400;font-size:clamp(44px,8vw,112px);line-height:1;margin:24px 0 36px;position:relative}
+.contact h2 em{color:var(--gold-hi)}
+.mail{font-family:var(--serif);font-size:clamp(22px,3.4vw,40px);border-bottom:1px solid var(--moose);padding-bottom:4px;transition:.3s;position:relative;word-break:break-all}
+.mail:hover{color:var(--gold-hi);border-color:var(--gold)}
+.contact .hero-cta{justify-content:center;margin-top:44px}
+footer{border-top:1px solid var(--line);margin-top:120px;padding-top:26px;display:flex;justify-content:space-between;gap:16px;color:var(--dim);flex-wrap:wrap}
+
+/* lang toggling */
+html[lang="en"] [data-zh-only]{display:none}
+html[lang="zh"] [data-en-only]{display:none}
+
+@media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}.reveal{opacity:1;transform:none}}
+/* ---- Scenes (city silhouettes) ---- */
+.scene{position:relative;margin:56px 0 24px;overflow:hidden}
+.scene-text{position:relative;z-index:2;text-align:center;max-width:700px;margin:0 auto;padding:0 16px}
+.scene-when{color:var(--gold)}
+.scene-text h3{font-family:var(--serif);font-weight:500;font-size:clamp(32px,4.4vw,56px);line-height:1.05;margin:14px 0 8px}
+.scene-sub{font-family:var(--serif);font-style:italic;font-size:clamp(18px,2vw,24px);color:var(--gold-hi)}
+html[lang="zh"] .scene-sub{font-style:normal}
+.scene-where{color:var(--muted);margin-top:10px}
+.scene-course{font-size:14px;color:var(--sycamore);margin-top:16px}
+.scene-art{position:relative;width:100%;aspect-ratio:1600/720;min-height:300px;margin-top:-24px;
+  -webkit-mask-image:linear-gradient(to bottom,transparent 0,#000 16%,#000 80%,transparent 100%);mask-image:linear-gradient(to bottom,transparent 0,#000 16%,#000 80%,transparent 100%)}
+.scene-art img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:center bottom;will-change:transform}
+.sc-back{transform:translateY(0) scale(1.06);opacity:.9}
+.sc-front{opacity:0;transform:translateY(40px);transition:opacity 1.2s var(--ease),transform 1.4s var(--ease)}
+.scene.in .sc-front{opacity:1;transform:none}
+.scene-cap{position:absolute;right:24px;bottom:22%;color:var(--dim);font-size:10px;z-index:2}
+@media (max-width:760px){.scene-art{min-height:240px}.scene-cap{display:none}.scene{margin-top:40px}}
+
+/* ---- Work (real) ---- */
+button.work{font:inherit;color:inherit;text-align:left;cursor:pointer;padding:0}
+.work-img img{position:absolute;inset:0}
+.work-img::after{content:"";position:absolute;inset:0;background:linear-gradient(180deg,transparent 55%,rgba(15,13,13,.55));pointer-events:none}
+.work-num{position:absolute;left:18px;bottom:12px;z-index:1;font-family:var(--serif);font-size:44px;line-height:1;color:transparent;-webkit-text-stroke:1px var(--gold-hi)}
+.zh-sub{font-size:.7em;color:var(--sycamore)}
+/* ---- Project modal ---- */
+.pm{position:fixed;inset:0;z-index:150;background:rgba(10,9,9,.94);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);overflow-y:auto;opacity:0;visibility:hidden;transition:opacity .45s var(--ease),visibility .45s}
+.pm.open{opacity:1;visibility:visible}
+.pm-close{position:fixed;top:20px;right:20px;z-index:2;width:46px;height:46px;border-radius:50%;border:1px solid var(--line);background:rgba(15,13,13,.7);color:var(--text);font-size:20px;cursor:pointer;transition:.3s}
+.pm-close:hover{border-color:var(--gold);color:var(--gold-hi)}
+.pm-inner{max-width:1240px;margin:0 auto;padding:90px 32px 120px}
+.pm-head{display:grid;grid-template-columns:1fr 1fr;gap:48px;align-items:end;border-bottom:1px solid var(--line);padding-bottom:36px;margin-bottom:36px}
+.pm-head .mono{color:var(--gold)}
+.pm-head h2{font-family:var(--serif);font-weight:400;font-size:clamp(44px,6vw,84px);line-height:1;margin-top:14px}
+.pm-head h2 small{display:block;font-size:.38em;color:var(--sycamore);margin-top:10px;font-style:italic}
+.pm-desc{color:#cdc9c3;font-size:15px}
+.pm-meta{display:flex;flex-wrap:wrap;gap:8px;margin-top:20px}
+.pm-videos{display:flex;flex-wrap:wrap;gap:10px;margin-top:22px}
+.pm-videos .btn{padding:9px 18px;font-size:13px}
+.pm-pages{display:grid;gap:16px}
+.pm-pages img{width:100%;height:auto;border-radius:10px;border:1px solid var(--line);background:var(--surface)}
+.pm-nav{display:flex;justify-content:space-between;gap:16px;margin-top:48px;padding-top:28px;border-top:1px solid var(--line)}
+.pm-nav button{background:none;border:0;color:var(--muted);cursor:pointer;font-family:var(--serif);font-size:24px;transition:.3s;text-align:left}
+.pm-nav button:last-child{text-align:right}
+.pm-nav button:hover{color:var(--gold-hi)}
+.pm-nav .mono{display:block;color:var(--dim);margin-bottom:4px}
+.pm-note{margin-top:14px;color:var(--dim)}
+@media (max-width:900px){.pm-head{grid-template-columns:1fr;gap:20px}.pm-inner{padding:80px 16px 80px}}
+</style>
+</head>
+<body>
+
+<!-- ================= LOADER ================= -->
+<div id="loader" aria-hidden="true">
+  <div class="ld-top">
+    <div class="logo"><div class="logo-mark"><span>Y</span></div>YANGFAN WEN</div>
+    <div class="ld-pct" id="ldPct">0%</div>
+  </div>
+  <div class="ld-body">
+    <div class="ld-list" id="ldCities">
+      <span class="mono cap">Base Camp</span>
+      <span class="mono">London</span>
+      <span class="mono">Hangzhou</span>
+      <span class="mono">Guangzhou</span>
+    </div>
+    <canvas id="ldGlobe"></canvas>
+    <div class="ld-list r" id="ldFields">
+      <span class="mono cap">Practice</span>
+      <span class="mono">Games Design</span>
+      <span class="mono">Interaction Design</span>
+      <span class="mono">Player Research</span>
+      <span class="mono">Prototyping</span>
+      <span class="mono">Design QA</span>
+    </div>
+  </div>
+  <div class="ld-bottom">
+    <div class="ld-bar"><i id="ldBar"></i></div>
+    <div class="mono" style="color:var(--dim)" id="ldMsg">Preparing the experience</div>
+    <div class="ld-choose" id="ldChoose">
+      <button class="btn" data-pick="en">English</button>
+      <button class="btn" data-pick="zh">中文</button>
+    </div>
+  </div>
+</div>
+
+<!-- ================= NAV ================= -->
+<nav>
+  <a href="#top" class="logo"><div class="logo-mark"><span>Y</span></div><span data-en-only>Yangfan</span><span data-zh-only>温杨帆</span></a>
+  <div class="nav-links">
+    <a href="#about"><span data-en-only>About</span><span data-zh-only>关于</span></a>
+    <a href="#experience"><span data-en-only>Experience</span><span data-zh-only>经历</span></a>
+    <a href="#work"><span data-en-only>Work</span><span data-zh-only>作品</span></a>
+    <a href="#skills"><span data-en-only>Skills</span><span data-zh-only>技能</span></a>
+    <a href="#contact"><span data-en-only>Contact</span><span data-zh-only>联系</span></a>
+  </div>
+  <button class="lang" id="langBtn">中文</button>
+</nav>
+
+<main id="top">
+<!-- ================= HERO ================= -->
+<section class="hero" id="about">
+  <canvas id="heroGlobe"></canvas>
+  <div class="wrap hero-inner">
+    <div class="portrait reveal">
+      <img src="assets/portrait.jpg?v=3" alt="Yangfan Wen">
+    </div>
+    <div>
+      <div class="eyebrow mono reveal"><span data-en-only>Game Interaction Designer · London</span><span data-zh-only>游戏交互设计师 · 伦敦</span></div>
+      <h1 class="reveal"><span data-en-only>Yangfan<br>Wen</span><span data-zh-only>温杨帆</span></h1>
+      <p class="hero-role reveal">
+        <span data-en-only>Designing how players move, decide and feel — from task flows and prototypes to the last missing button state. Formerly at NetEase on <i>Identity V</i> and <i>Fantasy Westward Journey Mobile</i>; now reading MA Games Design at UAL.</span>
+        <span data-zh-only>关注玩家如何行动、决策与感受——从任务流程、原型，到最后一个被遗漏的按钮状态。曾在网易参与《第五人格》与《梦幻西游》手游的交互设计，现于伦敦艺术大学攻读游戏设计硕士。</span>
+      </p>
+      <div class="hero-cta reveal">
+                <a class="btn solid" href="Yangfan_Wen_CV.pdf" download><span data-en-only>Download CV</span><span data-zh-only>下载简历</span>
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 4v12m0 0 5-5m-5 5-5-5M5 20h14"/></svg></a>
+        <a class="icon-btn" href="mailto:ywen8019@gmail.com" aria-label="Email"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="m3 7 9 6 9-6"/></svg></a>
+      </div>
+      <!-- TODO: replace with your own motto -->
+      <p class="quote reveal"><span data-en-only>“A good interface is a promise the game keeps.”</span><span data-zh-only>“好的界面，是游戏对玩家信守的承诺。”</span></p>
+    </div>
+  </div>
+  <div class="scroll-hint mono"><i></i><span data-en-only>Scroll</span><span data-zh-only>向下</span></div>
+</section>
+
+<!-- ================= EDUCATION ================= -->
+<section class="sec" id="education">
+  <div class="wrap">
+    <div class="sec-head reveal">
+      <h2><span data-en-only>Edu<em>cation</em></span><span data-zh-only>教育<em>背景</em></span></h2>
+      <span class="mono">01 / 04</span>
+    </div>
+  </div>
+<div class="scene" data-scene="london">
+  <div class="scene-text">
+    <span class="mono scene-when">Sep 2026 — <span data-en-only>Present</span><span data-zh-only>至今</span></span>
+    <h3><span data-en-only>University of the Arts London</span><span data-zh-only>伦敦艺术大学</span></h3>
+    <div class="scene-sub"><span data-en-only>MA Games Design</span><span data-zh-only>游戏设计 硕士</span></div>
+    <div class="mono scene-where"><span data-en-only>London · United Kingdom</span><span data-zh-only>英国 · 伦敦</span></div>
+      <p class="scene-course"><span data-en-only>Design &amp; Prototyping · Understanding Play · Critical Play &amp; Development</span><span data-zh-only>设计与原型 · 理解游戏性 · 批判性游戏与开发</span></p>
+  </div>
+  <div class="scene-art" aria-hidden="true">
+    <img class="sc-back" src="assets/scenes/london-back.svg" alt="" loading="lazy">
+    <img class="sc-front" src="assets/scenes/london-front.svg" alt="" loading="lazy">
+    <span class="mono scene-cap"><span data-en-only>The Thames · London Eye · Tower Bridge · Westminster</span><span data-zh-only>泰晤士河 · 伦敦眼 · 塔桥 · 威斯敏斯特</span></span>
+  </div>
+</div>
+<div class="scene" data-scene="guangzhou">
+  <div class="scene-text">
+    <span class="mono scene-when">Sep 2021 — Jun 2025</span>
+    <h3><span data-en-only>Guangzhou Academy of Fine Arts</span><span data-zh-only>广州美术学院</span></h3>
+    <div class="scene-sub"><span data-en-only>BA Interaction Design</span><span data-zh-only>交互设计 学士</span></div>
+    <div class="mono scene-where"><span data-en-only>Guangzhou · China</span><span data-zh-only>中国 · 广州</span></div>
+      <p class="scene-course"><span data-en-only>Advanced User Research · Information &amp; Visualisation · Design Thinking · Ergonomics</span><span data-zh-only>高级用户研究 · 信息与可视化 · 设计思维 · 人机工程学</span></p>
+  </div>
+  <div class="scene-art" aria-hidden="true">
+    <img class="sc-back" src="assets/scenes/guangzhou-back.svg" alt="" loading="lazy">
+    <img class="sc-front" src="assets/scenes/guangzhou-front.svg" alt="" loading="lazy">
+    <span class="mono scene-cap"><span data-en-only>Pearl River · Canton Tower · Opera House</span><span data-zh-only>珠江 · 广州塔 · 大剧院</span></span>
+  </div>
+</div>
+</section>
+
+<!-- ================= EXPERIENCE ================= -->
+<section class="sec" id="experience" style="padding-top:40px">
+  <div class="wrap">
+    <div class="sec-head reveal">
+      <h2><span data-en-only>Experi<em>ence</em></span><span data-zh-only>实习<em>经历</em></span></h2>
+      <span class="mono">02 / 04</span>
+    </div>
+
+  </div>
+<div class="scene" data-scene="hangzhou">
+  <div class="scene-text">
+    <span class="mono scene-when">Jul 2025 — Sep 2026</span>
+    <h3><span data-en-only>NetEase Games</span><span data-zh-only>网易游戏</span></h3>
+    <div class="scene-sub"><span data-en-only>Identity V</span><span data-zh-only>《第五人格》</span></div>
+    <div class="mono scene-where"><span data-en-only>Hangzhou · China</span><span data-zh-only>中国 · 杭州</span></div>
+  </div>
+  <div class="scene-art" aria-hidden="true">
+    <img class="sc-back" src="assets/scenes/hangzhou-back.svg" alt="" loading="lazy">
+    <img class="sc-front" src="assets/scenes/hangzhou-front.svg" alt="" loading="lazy">
+    <span class="mono scene-cap"><span data-en-only>West Lake · Leifeng Pagoda · Broken Bridge</span><span data-zh-only>西湖 · 雷峰塔 · 断桥</span></span>
+  </div>
+</div>
+  <div class="wrap">
+    <div class="xp">
+      <aside class="xp-side reveal">
+        <div class="xp-idx">01</div>
+        <div class="xp-co"><span data-en-only>NetEase Games</span><span data-zh-only>网易游戏</span></div>
+        <div class="xp-game"><span data-en-only>Identity V</span><span data-zh-only>《第五人格》</span></div>
+        <div class="xp-meta mono"><span>Jul 2025 — Sep 2026</span><span data-en-only>Hangzhou, China</span><span data-zh-only>中国 · 杭州</span></div>
+      </aside>
+      <div>
+        <div class="xp-role reveal"><span data-en-only>Gaming Interaction Design Intern</span><span data-zh-only>游戏交互设计实习生</span></div>
+        <div class="xp-items">
+          <div class="xp-item reveal"><h4><span data-en-only>Interaction Design</span><span data-zh-only>交互设计</span></h4>
+            <p><span data-en-only>Designed task flows for Identity V’s systems, events and in-game shop around player expectations and established patterns; built annotated Figma prototypes covering screen transitions, decision points and alternative flows for the development team.</span><span data-zh-only>基于玩家预期与成熟交互范式，为《第五人格》的系统、活动及商城设计任务流程；输出带标注的 Figma 原型，明确页面跳转、决策节点与分支流程，向开发团队准确传达交互意图。</span></p></div>
+          <div class="xp-item reveal"><h4><span data-en-only>Usability Testing</span><span data-zh-only>可用性测试</span></h4>
+            <p><span data-en-only>Ran usability tests and analysed player feedback, logging task completion, navigation errors and hesitation points; prioritised findings by severity, refined flows and validated revised prototypes with players before release.</span><span data-zh-only>组织可用性测试并分析玩家反馈，记录任务完成率、导航错误与犹豫节点；按严重程度排序问题，迭代交互流程，并在上线前与玩家验证修订后的原型。</span></p></div>
+          <div class="xp-item reveal"><h4><span data-en-only>Design QA</span><span data-zh-only>设计走查</span></h4>
+            <p><span data-en-only>Coordinated handoff with game designers, UI artists and engineers; reviewed builds against specs for edge cases, visual consistency, missing component states and wrong transitions, tracking each issue to resolution before updates went live.</span><span data-zh-only>与策划、UI 美术及程序协作完成设计交付；对照交互规范走查开发版本，检查边界情况、视觉一致性、组件状态缺失与跳转错误，并跟踪问题直至版本上线前全部解决。</span></p></div>
+        </div>
+      </div>
+    </div>
+  </div>
+<div class="scene" data-scene="qilou">
+  <div class="scene-text">
+    <span class="mono scene-when">Dec 2024 — Jun 2025</span>
+    <h3><span data-en-only>NetEase Games</span><span data-zh-only>网易游戏</span></h3>
+    <div class="scene-sub"><span data-en-only>Fantasy Westward Journey Mobile</span><span data-zh-only>《梦幻西游》手游</span></div>
+    <div class="mono scene-where"><span data-en-only>Guangzhou · China</span><span data-zh-only>中国 · 广州</span></div>
+  </div>
+  <div class="scene-art" aria-hidden="true">
+    <img class="sc-back" src="assets/scenes/qilou-back.svg" alt="" loading="lazy">
+    <img class="sc-front" src="assets/scenes/qilou-front.svg" alt="" loading="lazy">
+    <span class="mono scene-cap"><span data-en-only>Qilou arcades of old Guangzhou</span><span data-zh-only>广州 · 骑楼老街</span></span>
+  </div>
+</div>
+  <div class="wrap">
+    <div class="xp">
+      <aside class="xp-side reveal">
+        <div class="xp-idx">02</div>
+        <div class="xp-co"><span data-en-only>NetEase Games</span><span data-zh-only>网易游戏</span></div>
+        <div class="xp-game"><span data-en-only>Fantasy Westward Journey Mobile</span><span data-zh-only>《梦幻西游》手游</span></div>
+        <div class="xp-meta mono"><span>Dec 2024 — Jun 2025</span><span data-en-only>Guangzhou, China</span><span data-zh-only>中国 · 广州</span></div>
+      </aside>
+      <div>
+        <div class="xp-role reveal"><span data-en-only>Gaming Interaction Design Intern</span><span data-zh-only>游戏交互设计实习生</span></div>
+        <div class="xp-items">
+          <div class="xp-item reveal"><h4><span data-en-only>Information Architecture</span><span data-zh-only>信息架构</span></h4>
+            <p><span data-en-only>Analysed player tasks to reorganise feature groups and navigation hierarchy; surfaced frequent actions, consolidated redundant entry points and shortened paths to improve findability and cut interaction cost.</span><span data-zh-only>分析玩家任务，重组功能分组与导航层级；前置高频操作、合并冗余入口、缩短操作路径，提升功能可发现性并降低交互成本。</span></p></div>
+          <div class="xp-item reveal"><h4><span data-en-only>UI Specifications</span><span data-zh-only>交互规范</span></h4>
+            <p><span data-en-only>Defined patterns for controls, modals and system messages — default, selected, disabled, loading and error states, feedback, and animation duration &amp; easing — in shared specs that kept interactions consistent across systems.</span><span data-zh-only>制定控件、弹窗与系统提示的交互范式，明确默认、选中、禁用、加载与报错等状态，以及反馈形式和动效时长与曲线，沉淀为共享规范，保证各系统交互一致。</span></p></div>
+          <div class="xp-item reveal"><h4><span data-en-only>UX Optimisation</span><span data-zh-only>体验优化</span></h4>
+            <p><span data-en-only>Audited legacy interfaces through heuristic evaluation and proposed redesigns that respected player habits, game rules and technical limits; scoped changes with designers and delivered annotated specs for the update.</span><span data-zh-only>以启发式评估审视旧版界面，在尊重玩家习惯、游戏规则与技术约束的前提下提出改版方案；与策划确定改动范围，交付带标注的交互方案用于版本更新。</span></p></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ================= WORK ================= -->
+<section class="sec" id="work" style="padding-top:40px">
+  <div class="wrap">
+    <div class="sec-head reveal">
+      <h2><span data-en-only>Selected <em>Work</em></span><span data-zh-only>精选<em>作品</em></span></h2>
+      <span class="mono">03 / 04</span>
+    </div>
+    <div class="work-grid">
+      <button class="work wide reveal" data-project="zone">
+        <span class="arrow">↗</span>
+        <div class="work-img"><img src="assets/work/cover-zone.jpg" alt="In the Zone" loading="lazy"><span class="work-num">01</span></div>
+        <div class="work-body">
+          <div class="work-tags"><span class="tag">Immersive Experience</span><span class="tag">Unity</span><span class="tag">Level Design</span><span class="tag">VR</span></div>
+          <h3>In the Zone<span data-zh-only class="zh-sub"> · 心流之境</span></h3>
+          <p><span data-en-only>Recreating the time-stopping immersion shared by extreme sports and falling in love — a six-level immersive Unity experience linked by wormholes.</span><span data-zh-only>将极限运动与恋爱中共有的“忘我”状态，转化为由“虫洞”串联的六关沉浸式 Unity 体验。</span></p>
+        </div>
+      </button>
+      <button class="work  reveal" data-project="death">
+        <span class="arrow">↗</span>
+        <div class="work-img"><img src="assets/work/cover-death.jpg" alt="The Fourth Death" loading="lazy"><span class="work-num">02</span></div>
+        <div class="work-body">
+          <div class="work-tags"><span class="tag">Speculative Design</span><span class="tag">Worldbuilding</span><span class="tag">Animation</span></div>
+          <h3>The Fourth Death<span data-zh-only class="zh-sub"> · 第四次死亡</span></h3>
+          <p><span data-en-only>A speculative case file on the industrialisation of regret: a fictional “Chrono-Agent” pill, four crime scenes and an art-narrative film.</span><span data-zh-only>关于“后悔”被产业化的思辨设计：虚构的“后悔药”、四个案发现场与一部艺术叙事短片。</span></p>
+        </div>
+      </button>
+      <button class="work  reveal" data-project="gluttony">
+        <span class="arrow">↗</span>
+        <div class="work-img"><img src="assets/work/cover-gluttony.jpg" alt="Gluttony Paradise" loading="lazy"><span class="work-num">03</span></div>
+        <div class="work-body">
+          <div class="work-tags"><span class="tag">Critical Game</span><span class="tag">Unity</span><span class="tag">AI NPC</span></div>
+          <h3>Gluttony Paradise<span data-zh-only class="zh-sub"> · 暴食乐园</span></h3>
+          <p><span data-en-only>A candy-coloured critical game that simulates binge eating, mapping anxiety → relief → repetition onto cycles of consumption.</span><span data-zh-only>一款模拟暴食的批判性游戏，把“焦虑 → 缓解 → 再循环”映射为消费主义的闭环。</span></p>
+        </div>
+      </button>
+      <button class="work wide reveal" data-project="protagonist">
+        <span class="arrow">↗</span>
+        <div class="work-img"><img src="assets/work/cover-protagonist.jpg" alt="Be Protagonist" loading="lazy"><span class="work-num">04</span></div>
+        <div class="work-body">
+          <div class="work-tags"><span class="tag">Interactive Installation</span><span class="tag">TouchDesigner</span><span class="tag">Gesture & Face Tracking</span><span class="tag">3D Printing</span></div>
+          <h3>Be Protagonist<span data-zh-only class="zh-sub"> · 成为主角</span></h3>
+          <p><span data-en-only>An installation answering “NPC mentality”: participants design facial armour by gesture and leave with a 3D-printed protagonist ID card.</span><span data-zh-only>回应“NPC 心态”的交互装置：参与者用手势设计专属“面甲”，并带走一张 3D 打印的主角身份卡。</span></p>
+        </div>
+      </button>
+    </div>
+  </div>
+</section>
+
+<!-- ================= SKILLS ================= -->
+<section class="sec" id="skills" style="padding-top:40px">
+  <div class="wrap">
+    <div class="sec-head reveal">
+      <h2><span data-en-only>Skills &amp; <em>Craft</em></span><span data-zh-only>技能与<em>工具</em></span></h2>
+      <span class="mono">04 / 04</span>
+    </div>
+    <div class="skills">
+      <div class="sk reveal">
+        <h3><span data-en-only>Design &amp; Prototyping</span><span data-zh-only>设计与原型</span></h3>
+        <span class="mono">UX · UI · Game</span>
+        <div class="chips"><span class="chip key">Figma</span><span class="chip key">Unity</span><span class="chip">XMind</span><span class="chip">Photoshop</span><span class="chip">Illustrator</span><span class="chip">Procreate</span><span class="chip">Notion</span></div>
+      </div>
+      <div class="sk reveal">
+        <h3><span data-en-only>3D &amp; Motion</span><span data-zh-only>三维与动效</span></h3>
+        <span class="mono">Modelling · Video</span>
+        <div class="chips"><span class="chip key">Cinema 4D</span><span class="chip key">Blender</span><span class="chip">Rhino</span><span class="chip">Creo</span><span class="chip">After Effects</span><span class="chip">Premiere Pro</span><span class="chip">Media Encoder</span><span class="chip">Lightroom</span></div>
+      </div>
+      <div class="sk reveal">
+        <h3><span data-en-only>Research &amp; Making</span><span data-zh-only>研究与制作</span></h3>
+        <span class="mono">Data · Hardware</span>
+        <div class="chips"><span class="chip key">SPSS</span><span class="chip">Power BI</span><span class="chip">Word</span><span class="chip">PowerPoint</span><span class="chip">3D Printing</span><span class="chip">Laser Engraving</span><span class="chip">Rapid Prototyping</span><span class="chip">Camera &amp; Drone</span></div>
+      </div>
+    </div>
+
+    <div class="beyond reveal">
+      <div class="by"><div class="n">10</div><h4><span data-en-only>Piano · Level 10</span><span data-zh-only>钢琴 · 十级</span></h4><p><span data-en-only>Rhythm and timing, carried into motion design.</span><span data-zh-only>把节奏感带进动效设计。</span></p></div>
+      <div class="by"><div class="n">Hip&#8209;hop</div><h4><span data-en-only>Street Dance Captain</span><span data-zh-only>校街舞队 Hip-hop 队长</span></h4><p>2022 — 2023</p></div>
+      <div class="by"><div class="n">2 yrs</div><h4><span data-en-only>School Basketball Team</span><span data-zh-only>校篮球队</span></h4><p>2021 — 2023</p></div>
+      <div class="by"><div class="n">∞</div><h4><span data-en-only>Also</span><span data-zh-only>其他爱好</span></h4><p><span data-en-only>Hiking, climbing, drawing, calligraphy, travel.</span><span data-zh-only>徒步、攀岩、绘画、书法、旅行。</span></p></div>
+    </div>
+  </div>
+</section>
+
+<!-- ================= CONTACT ================= -->
+<section class="contact" id="contact">
+  <div class="wrap">
+    <span class="mono reveal"><span data-en-only>Open to opportunities</span><span data-zh-only>期待合作与机会</span></span>
+    <h2 class="reveal"><span data-en-only>Let’s make<br><em>something playable.</em></span><span data-zh-only>一起做点<br><em>好玩的东西。</em></span></h2>
+    <a class="mail reveal" href="mailto:ywen8019@gmail.com">ywen8019@gmail.com</a>
+    <div class="hero-cta reveal">
+      <a class="btn solid" href="Yangfan_Wen_CV.pdf" download><span data-en-only>Download CV</span><span data-zh-only>下载简历</span></a>
+    </div>
+    <footer class="mono">
+      <span>© 2026 Yangfan Wen</span>
+      <span data-en-only>London · Hangzhou · Guangzhou</span><span data-zh-only>伦敦 · 杭州 · 广州</span>
+      <a href="#top"><span data-en-only>Back to top ↑</span><span data-zh-only>回到顶部 ↑</span></a>
+    </footer>
+  </div>
+</section>
+</main>
+
+<!-- ================= PROJECT MODAL ================= -->
+<div class="pm" id="pm" role="dialog" aria-modal="true" aria-labelledby="pmTitle">
+  <button class="pm-close" id="pmClose" aria-label="Close">✕</button>
+  <div class="pm-inner">
+    <div class="pm-head">
+      <div><span class="mono" id="pmNum"></span><h2 id="pmTitle"></h2></div>
+      <div><p class="pm-desc" id="pmDesc"></p><div class="pm-meta" id="pmTags"></div><div class="pm-videos" id="pmVideos"></div></div>
+    </div>
+    <div class="pm-pages" id="pmPages"></div>
+    <div class="pm-nav"><button id="pmPrev"></button><button id="pmNext"></button></div>
+  </div>
+</div>
+
+<script>
+/* ---------- language ---------- */
+const root=document.documentElement;
+function setLang(l){root.lang=l;document.getElementById('langBtn').textContent=l==='en'?'中文':'EN';try{localStorage.setItem('yw-lang',l)}catch(e){}}
+let saved=null;try{saved=localStorage.getItem('yw-lang')}catch(e){}
+setLang(saved||'en');
+document.getElementById('langBtn').onclick=()=>setLang(root.lang==='en'?'zh':'en');
+
+/* ---------- dot globe ---------- */
+function Globe(canvas,opts){
+  const ctx=canvas.getContext('2d');const N=opts.n||1400;const pts=[];
+  const ga=Math.PI*(3-Math.sqrt(5));
+  for(let i=0;i<N;i++){const y=1-(i/(N-1))*2,r=Math.sqrt(1-y*y),t=ga*i;pts.push([Math.cos(t)*r,y,Math.sin(t)*r])}
+  // lat/lon → xyz
+  const ll=(la,lo)=>{la*=Math.PI/180;lo*=Math.PI/180;return[Math.cos(la)*Math.cos(lo),Math.sin(la),Math.cos(la)*Math.sin(lo)]};
+  const pins=[{n:'LONDON',p:ll(51.5,-0.1)},{n:'HANGZHOU',p:ll(30.3,120.2)},{n:'GUANGZHOU',p:ll(23.1,113.3)}];
+  let rot=opts.start||0,W,H,R,dpr;
+  function size(){dpr=Math.min(devicePixelRatio||1,2);const b=canvas.getBoundingClientRect();W=b.width;H=b.height;canvas.width=W*dpr;canvas.height=H*dpr;R=Math.min(W,H)*.42}
+  size();addEventListener('resize',size);
+  const tilt=-.38,ct=Math.cos(tilt),st=Math.sin(tilt);
+  function proj(p){const c=Math.cos(rot),s=Math.sin(rot);let x=p[0]*c-p[2]*s,z=p[0]*s+p[2]*c,y=p[1];const y2=y*ct-z*st,z2=y*st+z*ct;return[W/2+x*R,H/2-y2*R,z2]}
+  function arc(a,b,t){ // great-circle-ish arc lifted
+    const out=[];for(let i=0;i<=40;i++){const k=i/40;let v=[a[0]+(b[0]-a[0])*k,a[1]+(b[1]-a[1])*k,a[2]+(b[2]-a[2])*k];const m=Math.hypot(...v);const lift=1+Math.sin(k*Math.PI)*.18;v=v.map(q=>q/m*lift);out.push(v)}return out}
+  const arcs=[arc(pins[0].p,pins[1].p),arc(pins[0].p,pins[2].p)];
+  let tick=0;
+  function draw(){
+    tick++;ctx.setTransform(dpr,0,0,dpr,0,0);ctx.clearRect(0,0,W,H);
+    // glow rim
+    const g=ctx.createRadialGradient(W/2,H/2,R*.7,W/2,H/2,R*1.15);g.addColorStop(0,'rgba(185,168,143,0)');g.addColorStop(.85,'rgba(185,168,143,.10)');g.addColorStop(1,'rgba(185,168,143,0)');
+    ctx.fillStyle=g;ctx.beginPath();ctx.arc(W/2,H/2,R*1.15,0,7);ctx.fill();
+    for(const p of pts){const [x,y,z]=proj(p);if(z<-.05&&!opts.back)continue;const a=z>0?.25+z*.65:.08;ctx.fillStyle=`rgba(185,168,143,${a})`;const s=(z>0?1.1+z*.9:.8)*(opts.dot||1);ctx.fillRect(x-s/2,y-s/2,s,s)}
+    // arcs
+    ctx.lineWidth=1;
+    arcs.forEach((A,i)=>{const prog=((tick*.006)+i*.5)%1;ctx.beginPath();let started=false;
+      A.forEach((v,j)=>{const [x,y,z]=proj(v);if(z<0){started=false;return}if(!started){ctx.moveTo(x,y);started=true}else ctx.lineTo(x,y)});
+      ctx.strokeStyle='rgba(221,210,194,.35)';ctx.stroke();
+      const v=A[Math.floor(prog*40)],[x,y,z]=proj(v);if(z>0){ctx.fillStyle='#DDD2C2';ctx.beginPath();ctx.arc(x,y,2,0,7);ctx.fill()}});
+    pins.forEach(pin=>{const [x,y,z]=proj(pin.p);if(z<0)return;
+      ctx.fillStyle='#DDD2C2';ctx.beginPath();ctx.arc(x,y,2.6,0,7);ctx.fill();
+      ctx.strokeStyle='rgba(221,210,194,'+(.6-((tick%90)/90)*.6)+')';ctx.beginPath();ctx.arc(x,y,3+((tick%90)/90)*12,0,7);ctx.stroke();
+      if(opts.labels){ctx.font='500 10px JetBrains Mono, monospace';const w=ctx.measureText(pin.n).width+12;
+        ctx.fillStyle='rgba(15,13,13,.8)';ctx.strokeStyle='rgba(185,168,143,.5)';ctx.beginPath();ctx.rect(x+8,y-20,w,16);ctx.fill();ctx.stroke();
+        ctx.fillStyle='#DDD2C2';ctx.fillText(pin.n,x+14,y-8)}});
+    rot+=opts.speed||.0025;
+    if(!document.hidden)requestAnimationFrame(draw);else setTimeout(()=>requestAnimationFrame(draw),300)
+  }
+  draw();
+}
+const reduce=matchMedia('(prefers-reduced-motion: reduce)').matches;
+Globe(document.getElementById('ldGlobe'),{n:1100,speed:reduce?0:.006,start:-1.9});
+Globe(document.getElementById('heroGlobe'),{n:2200,speed:reduce?0:.0016,start:-1.9,labels:true,dot:1.1});
+
+/* ---------- loader ---------- */
+(function(){
+  const pct=document.getElementById('ldPct'),bar=document.getElementById('ldBar'),
+        cities=[...document.querySelectorAll('#ldCities .mono:not(.cap)')],fields=[...document.querySelectorAll('#ldFields .mono:not(.cap)')];
+  let skip=false;try{skip=sessionStorage.getItem('yw-seen')==='1'}catch(e){}
+  const loader=document.getElementById('loader');
+  function finish(){loader.classList.add('done');document.body.style.overflow='';try{sessionStorage.setItem('yw-seen','1')}catch(e){}}
+  if(skip||reduce){finish();return}
+  document.body.style.overflow='hidden';
+  let p=0;const t0=performance.now(),dur=2200;
+  (function step(now){p=Math.min(1,(now-t0)/dur);const e=1-Math.pow(1-p,3);
+    pct.textContent=Math.round(e*100)+'%';bar.style.transform=`scaleX(${e})`;
+    cities.forEach((c,i)=>c.classList.toggle('on',i===Math.floor(e*cities.length*1.999)%cities.length));
+    fields.forEach((c,i)=>c.classList.toggle('on',i===Math.floor(e*fields.length*1.999)%fields.length));
+    if(p<1)requestAnimationFrame(step);
+    else{document.getElementById('ldMsg').textContent='Choose your language / 选择语言';document.getElementById('ldChoose').classList.add('show')}
+  })(t0);
+  document.querySelectorAll('[data-pick]').forEach(b=>b.onclick=()=>{setLang(b.dataset.pick);finish()});
+})();
+
+/* ---------- reveal + nav active ---------- */
+const io=new IntersectionObserver(es=>es.forEach(e=>{if(e.isIntersecting){e.target.classList.add('in');io.unobserve(e.target)}}),{threshold:.12,rootMargin:'0px 0px -40px 0px'});
+document.querySelectorAll('.reveal').forEach((el,i)=>{el.style.transitionDelay=(i%3)*50+'ms';io.observe(el)});
+const links=[...document.querySelectorAll('.nav-links a')];
+const map={about:'about',education:'about',experience:'experience',work:'work',skills:'skills',contact:'contact'};
+const so=new IntersectionObserver(es=>es.forEach(e=>{if(e.isIntersecting){const id=map[e.target.id];links.forEach(a=>a.classList.toggle('active',a.getAttribute('href')==='#'+id))}}),{rootMargin:'-45% 0px -50% 0px'});
+document.querySelectorAll('section[id]').forEach(s=>so.observe(s));
+/* ---------- scenes: reveal + parallax ---------- */
+const scenes=[...document.querySelectorAll('.scene')];
+const sio=new IntersectionObserver(es=>es.forEach(e=>{if(e.isIntersecting){e.target.classList.add('in');sio.unobserve(e.target)}}),{threshold:.2});
+scenes.forEach(sc=>sio.observe(sc));
+if(!reduce){let ticking=false;
+  const upd=()=>{ticking=false;scenes.forEach(sc=>{const r=sc.getBoundingClientRect();if(r.bottom<0||r.top>innerHeight)return;
+    const p=(r.top+r.height/2-innerHeight/2)/innerHeight;sc.querySelector('.sc-back').style.transform=`translateY(${(p*70).toFixed(1)}px) scale(1.06)`})};
+  addEventListener('scroll',()=>{if(!ticking){ticking=true;requestAnimationFrame(upd)}},{passive:true});upd()}
+else scenes.forEach(sc=>sc.classList.add('in'));
+/* ---------- project modal ---------- */
+const PROJECTS={
+  zone:{n:'01',en:'In the Zone',zh:'心流之境',pages:[1,2,3,4,5],
+    tags:['Immersive Experience','Unity','C#','Level Design','VR','Body Storming'],
+    den:'While skiing with my partner I experienced a state of complete, self-forgetting focus — strikingly similar to falling in love. I call it “in the zone” rather than “flow”, to stress its distortion of time and space. Through interviews with 20 extreme-sports enthusiasts, body storming and moodboards, I translated its stages into six Unity levels — floating, tunnels, rolling balls and more — connected by “wormholes”, guiding participants through movement, emotion and perception.',
+    dzh:'和伴侣滑雪时，我体验到一种高度沉浸、忘我的专注——与恋爱中的感受惊人地相似。我称之为“in the zone”而非“心流”，以强调它对时间与空间的扭曲。通过对 20 位极限运动爱好者的访谈、身体风暴与情绪板，我将这一状态的各个阶段转化为六个 Unity 关卡（漂浮、隧道、滚球等），并以“虫洞”相连，引导参与者在运动、情绪与感知中重新体验“忘我”。',
+    videos:[['Showcase · YouTube','https://youtu.be/1zl_6Zqlujo'],['Showcase · Vimeo','https://vimeo.com/1133417435'],['Process · YouTube','https://youtu.be/0w9tn2J0AhU'],['Process · Vimeo','https://vimeo.com/1133388405']]},
+  death:{n:'02',en:'The Fourth Death',zh:'第四次死亡',pages:[6,7,8,9,10],
+    tags:['Speculative Design','Worldview Script','Digital Animation','Narrative Design'],
+    den:'A speculative design investigation into the industrialisation of regret. A fictional company sells the “Chrono-Agent” — a pill promising time reversal — and a crime-scene installation reveals how remorse is commodified. Four scenarios (a casino, the stock market, a cosmetic clinic and an exam hall) show that excessive consumption traps users inside regret itself. Includes an online survey on regret, an industry-chain analysis, the drug and brand system, and an art-narrative film.',
+    dzh:'一项关于“后悔”被产业化的思辨设计。虚构的公司售卖号称能让时间倒流的“Chrono-Agent”后悔药，并以案发现场式的装置揭示悔恨如何被商品化。赌场、股市、整形诊所与考场四个场景表明：过度消费最终让人困在后悔本身。项目包含关于后悔的线上调研、产业链分析、药物与品牌系统设计，以及一部艺术叙事短片。',
+    videos:[['Film · Vimeo','https://vimeo.com/1146518482'],['Film · YouTube','https://youtu.be/8FwmL-GGwm8']]},
+  gluttony:{n:'03',en:'Gluttony Paradise',zh:'暴食乐园',pages:[11,12,13,14,15],
+    tags:['Critical Game Design','Unity','AI Dialogue','Toon Shading','Playtesting'],
+    den:'An immersive game that simulates binge eating, drawn from personal experience. In a candy-coloured town players can eat without limit — until they are caught in the loop of anxiety → eating for relief → binge → repeat, mirroring the capitalist cycle of manufactured desire and brief satisfaction. Features an anxiety meter, AI-driven NPC dialogue, metaphorical food architecture, a shader-based visual shift into the binge state, and playtest-driven reflection.',
+    dzh:'一款源于个人经历、模拟暴食的沉浸式游戏。玩家在糖果色小镇中可以无限进食，却逐渐陷入“焦虑 → 进食缓解 → 暴食 → 再循环”的陷阱，映射资本主义中“制造欲望—短暂满足—更深焦虑”的循环。包含焦虑值系统、AI 驱动的 NPC 对话、带隐喻的食物建筑、进入暴食状态时的着色器视觉转换，以及基于试玩的反思与迭代。',
+    videos:[['Showcase · Vimeo','https://vimeo.com/1146351911'],['Showcase · YouTube','https://youtu.be/FIKNKOmD068'],['Process · Vimeo','https://vimeo.com/1146349151'],['Process · YouTube','https://youtu.be/0HQGpsshzZk']]},
+  protagonist:{n:'04',en:'Be Protagonist',zh:'成为主角',pages:[16,17,18,19],
+    tags:['Interactive Installation','TouchDesigner','Gesture Interaction','Facial Tracking','Gemini API','3D Printing'],
+    den:'An interactive installation responding to the “NPC mentality” and loss of self-worth among young people. Framed as a character-creation screen in the game “Earth Online”, participants use gestures to design a personal facial armour on a large screen. A Gemini-powered pipeline then turns their capture into a 3D model, and they leave with a 3D-printed protagonist ID card carrying a personal quest.',
+    dzh:'回应年轻人中流行的“NPC 心态”与自我价值感缺失的交互装置。作品以网络梗“地球 Online”的角色创建界面为框架，参与者在大屏前用手势设计属于自己的“面甲”；随后由基于 Gemini 的程序把截图转换为 3D 模型，参与者最终带走一张印有个人任务的 3D 打印主角身份卡。',
+    videos:[['Exhibition · YouTube','https://youtu.be/z7EUHCh-lFI'],['Exhibition · Vimeo','https://vimeo.com/1146352328']]}
+};
+const ORDER=Object.keys(PROJECTS);
+const pm=document.getElementById('pm');let cur=null,lastFocus=null;
+const esc=t=>t.replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+function openProject(k){
+  const P=PROJECTS[k],zh=root.lang==='zh';cur=k;
+  document.getElementById('pmNum').textContent=(zh?'作品 ':'Project ')+P.n;
+  document.getElementById('pmTitle').innerHTML=esc(P.en)+'<small>'+esc(P.zh)+'</small>';
+  document.getElementById('pmDesc').textContent=zh?P.dzh:P.den;
+  document.getElementById('pmTags').innerHTML=P.tags.map(t=>'<span class="tag">'+esc(t)+'</span>').join('');
+  document.getElementById('pmVideos').innerHTML=P.videos.map(([l,u])=>'<a class="btn" href="'+u+'" target="_blank" rel="noopener">▶ '+esc(l)+'</a>').join('');
+  document.getElementById('pmPages').innerHTML=P.pages.map((n,i)=>'<img src="assets/work/p'+String(n).padStart(2,'0')+'.jpg" alt="'+esc(P.en)+' — page '+(i+1)+'" loading="'+(i<1?'eager':'lazy')+'">').join('');
+  const i=ORDER.indexOf(k),pv=ORDER[(i+ORDER.length-1)%ORDER.length],nx=ORDER[(i+1)%ORDER.length];
+  const lab=(a,b)=>'<span class="mono">'+a+'</span>'+esc(PROJECTS[b].en);
+  document.getElementById('pmPrev').innerHTML=lab(zh?'← 上一个':'← Previous',pv);document.getElementById('pmPrev').onclick=()=>openProject(pv);
+  document.getElementById('pmNext').innerHTML=lab(zh?'下一个 →':'Next →',nx);document.getElementById('pmNext').onclick=()=>openProject(nx);
+  pm.scrollTop=0;
+  if(!pm.classList.contains('open')){lastFocus=document.activeElement;pm.classList.add('open');document.body.style.overflow='hidden';document.getElementById('pmClose').focus()}
+  try{history.replaceState(null,'','#work/'+k)}catch(e){}
+}
+function closeProject(){pm.classList.remove('open');document.body.style.overflow='';cur=null;try{history.replaceState(null,'','#work')}catch(e){}if(lastFocus)lastFocus.focus()}
+document.querySelectorAll('[data-project]').forEach(b=>b.addEventListener('click',()=>openProject(b.dataset.project)));
+document.getElementById('pmClose').onclick=closeProject;
+addEventListener('keydown',e=>{if(!cur)return;if(e.key==='Escape')closeProject();
+  if(e.key==='ArrowRight')document.getElementById('pmNext').click();if(e.key==='ArrowLeft')document.getElementById('pmPrev').click()});
+document.getElementById('langBtn').addEventListener('click',()=>{if(cur)openProject(cur)});
+{const m=location.hash.match(/^#work\/(\w+)/);if(m&&PROJECTS[m[1]]){try{sessionStorage.setItem('yw-seen','1')}catch(e){}document.getElementById('loader').classList.add('done');openProject(m[1])}}
+</script>
+</body>
+</html>
