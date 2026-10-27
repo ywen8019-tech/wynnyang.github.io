@@ -221,7 +221,7 @@ footer{border-top:1px solid var(--line);margin-top:120px;padding-top:26px;displa
 html[lang="en"] [data-zh-only]{display:none}
 html[lang="zh"] [data-en-only]{display:none}
 
-@media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}.reveal{opacity:1;transform:none}}
+@media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}.reveal{opacity:1;transform:none}.sc-back,.sc-front,.scene-text>*,.scene-cap{opacity:1!important;filter:none!important;-webkit-mask-image:none!important;mask-image:none!important;transform:none!important}}
 /* ---- Scenes (city silhouettes) ---- */
 .scene{position:relative;margin:56px 0 24px;overflow:hidden}
 .scene-text{position:relative;z-index:2;text-align:center;max-width:700px;margin:0 auto;padding:0 16px}
@@ -234,9 +234,23 @@ html[lang="zh"] .scene-sub{font-style:normal}
 .scene-art{position:relative;width:100%;aspect-ratio:1600/720;min-height:300px;margin-top:-24px;
   -webkit-mask-image:linear-gradient(to bottom,transparent 0,#000 16%,#000 80%,transparent 100%);mask-image:linear-gradient(to bottom,transparent 0,#000 16%,#000 80%,transparent 100%)}
 .scene-art img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:center bottom;will-change:transform}
-.sc-back{transform:translateY(0) scale(1.06);opacity:.9}
-.sc-front{opacity:0;transform:translateY(40px);transition:opacity 1.2s var(--ease),transform 1.4s var(--ease)}
-.scene.in .sc-front{opacity:1;transform:none}
+.sc-back,.sc-front{will-change:transform,opacity}
+.sc-back{opacity:0;filter:blur(6px);transform:translate3d(0,24px,0) scale(1.12);transition:opacity 1.6s cubic-bezier(.22,.8,.2,1),filter 1.8s cubic-bezier(.22,.8,.2,1)}
+.scene.in .sc-back{opacity:.9;filter:blur(0)}
+.sc-front{opacity:0;
+  -webkit-mask-image:linear-gradient(to top,#000 0%,#000 42%,transparent 58%,transparent 100%);mask-image:linear-gradient(to top,#000 0%,#000 42%,transparent 58%,transparent 100%);
+  -webkit-mask-size:100% 260%;mask-size:100% 260%;-webkit-mask-repeat:no-repeat;mask-repeat:no-repeat;
+  -webkit-mask-position:0 0%;mask-position:0 0%;
+  transition:opacity .9s ease .35s,-webkit-mask-position 2.4s cubic-bezier(.22,.8,.2,1) .35s,mask-position 2.4s cubic-bezier(.22,.8,.2,1) .35s}
+.scene.in .sc-front{opacity:1;-webkit-mask-position:0 100%;mask-position:0 100%}
+.scene-text{will-change:transform}
+.scene-text>*{opacity:0;transform:translate3d(0,18px,0);transition:opacity .9s ease,transform 1.1s cubic-bezier(.22,.8,.2,1)}
+.scene.in .scene-text>*{opacity:1;transform:none}
+.scene.in .scene-text>*:nth-child(2){transition-delay:.08s}
+.scene.in .scene-text>*:nth-child(3){transition-delay:.16s}
+.scene.in .scene-text>*:nth-child(4){transition-delay:.24s}
+.scene-cap{opacity:0;transition:opacity 1s ease 1.6s}
+.scene.in .scene-cap{opacity:1}
 .scene-cap{position:absolute;right:24px;bottom:22%;color:var(--dim);font-size:10px;z-index:2}
 @media (max-width:760px){.scene-art{min-height:240px}.scene-cap{display:none}.scene{margin-top:40px}}
 
@@ -246,6 +260,84 @@ button.work{font:inherit;color:inherit;text-align:left;cursor:pointer;padding:0}
 .work-img::after{content:"";position:absolute;inset:0;background:linear-gradient(180deg,transparent 55%,rgba(15,13,13,.55));pointer-events:none}
 .work-num{position:absolute;left:18px;bottom:12px;z-index:1;font-family:var(--serif);font-size:44px;line-height:1;color:transparent;-webkit-text-stroke:1px var(--gold-hi)}
 .zh-sub{font-size:.7em;color:var(--sycamore)}
+/* ---- More projects (compact) ---- */
+.more{margin-top:88px}
+.more-head{display:flex;align-items:baseline;justify-content:space-between;gap:16px;flex-wrap:wrap;border-bottom:1px solid var(--line);padding-bottom:16px;margin-bottom:28px}
+.more-head h3{font-family:var(--serif);font-weight:400;font-size:clamp(28px,3.2vw,40px);line-height:1}
+.more-head h3 em{font-style:italic;color:var(--gold-hi)}
+.more-head p{color:var(--muted);font-size:14px}
+.mini-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px}
+.mini{font:inherit;color:inherit;text-align:left;cursor:pointer;padding:0;border:1px solid var(--line);border-radius:12px;background:var(--bg-2);overflow:hidden;display:flex;flex-direction:column;transition:border-color .4s var(--ease),transform .4s var(--ease)}
+.mini:hover{border-color:rgba(185,168,143,.5);transform:translateY(-3px)}
+.mini:focus-visible,.work:focus-visible{outline:1px solid var(--gold-hi);outline-offset:3px}
+.mini-img{position:relative;aspect-ratio:16/10;overflow:hidden;background:var(--surface)}
+.mini-img img,.mini-img .mini-art{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;transition:transform 1s var(--ease)}
+.mini:hover .mini-img img{transform:scale(1.04)}
+.mini-badge{position:absolute;left:10px;top:10px;font-size:11px;padding:3px 9px;border-radius:999px;background:rgba(15,13,13,.72);color:#E9D9F2;border:1px solid rgba(214,180,236,.45);backdrop-filter:blur(6px)}
+.mini-body{padding:14px 16px 16px;display:flex;flex-direction:column;gap:6px;min-width:0}
+.mini-kind{font-size:9.5px;color:var(--gold)}
+.mini h4{font-family:var(--serif);font-weight:500;font-size:20px;line-height:1.15}
+.mini p{font-size:13px;color:var(--muted);line-height:1.5}
+.pm.pm-small .pm-pages{max-width:980px;margin:0 auto}
+.pm-pages.pm-shots{max-width:none;grid-template-columns:repeat(2,minmax(0,1fr))}
+@media (max-width:640px){.pm-pages.pm-shots{grid-template-columns:1fr}}
+.pm-badge{display:inline-block;margin-right:8px;font-size:12px;padding:2px 10px;border-radius:999px;color:#E9D9F2;border:1px solid rgba(214,180,236,.45)}
+.pm-empty{color:var(--muted);font-size:14px;padding:32px 0;text-align:center;border:1px dashed var(--line);border-radius:10px}
+
+@media (max-width:700px){
+  .mini-grid{grid-template-columns:1fr;gap:10px}
+  .mini{flex-direction:row}
+  .mini-img{width:118px;flex:none;aspect-ratio:auto;min-height:100%}
+  .mini-body{padding:12px 14px}
+  .mini h4{font-size:18px}
+  .mini p{display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+}
+/* ---- Film strip ---- */
+.hero{min-height:auto;padding:128px 0 56px}
+.hero .scroll-hint{display:none}
+#heroGlobe{top:46%}
+.strip{overflow:hidden;padding:8px 0 24px;-webkit-mask-image:linear-gradient(90deg,transparent,#000 6%,#000 94%,transparent);mask-image:linear-gradient(90deg,transparent,#000 6%,#000 94%,transparent)}
+.strip-track{display:flex;gap:14px;width:max-content;animation:strip 70s linear infinite}
+.strip:hover .strip-track,.strip:focus-within .strip-track{animation-play-state:paused}
+@keyframes strip{to{transform:translateX(calc(-50% - 7px))}}
+.strip-item{position:relative;flex:none;width:300px;aspect-ratio:16/10;border:0;border-radius:4px;overflow:hidden;padding:0;background:var(--bg-2);cursor:pointer;color:var(--text)}
+.strip-item img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;transition:opacity .6s var(--ease),transform 1.2s var(--ease)}
+.strip-item .s-col{opacity:0}
+.strip-item:hover .s-col,.strip-item:focus-visible .s-col{opacity:1}
+.strip-item:hover img{transform:scale(1.04)}
+.strip-item::before{content:"";position:absolute;inset:8px;border:1px solid rgba(221,210,194,.28);border-radius:2px;z-index:2;pointer-events:none;transition:border-color .4s}
+.strip-item:hover::before{border-color:rgba(221,210,194,.7)}
+.strip-item::after{content:"";position:absolute;inset:0;background:linear-gradient(180deg,transparent 50%,rgba(10,9,9,.78));z-index:1;pointer-events:none}
+.s-cap{position:absolute;left:20px;right:20px;bottom:16px;z-index:2;display:flex;flex-direction:column;gap:3px;text-align:left;font-family:var(--serif);font-size:19px;line-height:1.1}
+.s-cap i{font-style:normal;font-size:9px;color:var(--gold)}
+.strip-item:focus-visible{outline:1px solid var(--gold-hi);outline-offset:2px}
+@media (max-width:640px){.strip-item{width:220px}.s-cap{font-size:16px;left:16px;bottom:12px}}
+@media (prefers-reduced-motion:reduce){.strip{overflow-x:auto}.strip-track{animation:none}}
+/* ---- Experience: compact ---- */
+.xp-key{font-size:15px;color:var(--text)}
+.xp-more{display:none;font-size:14px;color:var(--muted);margin-top:10px}
+.xp-items.open .xp-more{display:block}
+.xp-toggle{margin-top:14px;background:none;border:1px solid var(--line);border-radius:999px;color:var(--gold);padding:8px 16px;cursor:pointer;transition:.3s}
+.xp-toggle:hover{border-color:var(--gold);color:var(--gold-hi)}
+.mini-badge.steam{color:#d6e4f0;border-color:rgba(160,190,220,.5)}
+/* ---- Viewer (CV / game) ---- */
+.viewer{position:fixed;inset:0;z-index:160;background:rgba(10,9,9,.96);display:flex;flex-direction:column}
+.viewer[hidden]{display:none}
+.viewer-bar{display:flex;align-items:center;gap:14px;padding:12px max(16px,env(safe-area-inset-right,0px)) 12px max(16px,env(safe-area-inset-left,0px));border-bottom:1px solid var(--line)}
+.viewer-bar .mono{color:var(--gold);flex:1;min-width:0}
+.viewer-actions .btn{padding:8px 16px;font-size:13px}
+.viewer-close{width:40px;height:40px;border-radius:50%;border:1px solid var(--line);background:none;color:var(--text);font-size:18px;cursor:pointer}
+.viewer-close:hover{border-color:var(--gold);color:var(--gold-hi)}
+.viewer-body{flex:1;min-height:0;overflow:auto;display:flex;justify-content:center;padding:24px 16px}
+.viewer-cv{width:100%;max-width:860px;height:auto;align-self:flex-start;border-radius:6px;box-shadow:0 20px 60px rgba(0,0,0,.5)}
+.viewer-game{width:100%;height:100%;border:0;border-radius:8px;background:#EFE3F2}
+.viewer-body:has(.viewer-game){padding:0}
+.viewer-video{width:100%;max-width:1280px;max-height:100%;align-self:center;background:#000;border-radius:8px;box-shadow:0 20px 60px rgba(0,0,0,.5)}
+
+.pm-video{position:relative;grid-column:1/-1;border-radius:10px;overflow:hidden;border:1px solid var(--line);background:#000}
+.pm-video video{display:block;width:100%;aspect-ratio:16/9;background:#000}
+.pm-video span{position:absolute;left:14px;top:12px;color:var(--gold-hi);pointer-events:none;text-shadow:0 1px 6px rgba(0,0,0,.8)}
+.pm-note{margin-top:12px;font-size:10px;line-height:1.7;color:var(--dim);text-transform:none;letter-spacing:.04em}
 /* ---- Project modal ---- */
 .pm{position:fixed;inset:0;z-index:150;background:rgba(10,9,9,.94);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);overflow-y:auto;opacity:0;visibility:hidden;transition:opacity .45s var(--ease),visibility .45s}
 .pm.open{opacity:1;visibility:visible}
@@ -330,13 +422,10 @@ button.work{font:inherit;color:inherit;text-align:left;cursor:pointer;padding:0}
     <div>
       <div class="eyebrow mono reveal"><span data-en-only>Game Interaction Designer · London</span><span data-zh-only>游戏交互设计师 · 伦敦</span></div>
       <h1 class="reveal"><span data-en-only>Yangfan<br>Wen</span><span data-zh-only>温杨帆</span></h1>
-      <p class="hero-role reveal">
-        <span data-en-only>Designing how players move, decide and feel — from task flows and prototypes to the last missing button state. Formerly at NetEase on <i>Identity V</i> and <i>Fantasy Westward Journey Mobile</i>; now reading MA Games Design at UAL.</span>
-        <span data-zh-only>关注玩家如何行动、决策与感受——从任务流程、原型，到最后一个被遗漏的按钮状态。曾在网易参与《第五人格》与《梦幻西游》手游的交互设计，现于伦敦艺术大学攻读游戏设计硕士。</span>
-      </p>
+      <p class="hero-role reveal"><span data-en-only>Game interaction designer · ex-NetEase (<i>Identity V</i>, <i>Fantasy Westward Journey Mobile</i>) · MA Games Design, UAL</span><span data-zh-only>游戏交互设计师 · 前网易《第五人格》《梦幻西游》手游 · 伦敦艺术大学游戏设计硕士</span></p>
       <div class="hero-cta reveal">
-                <a class="btn solid" href="Yangfan_Wen_CV.pdf" download><span data-en-only>Download CV</span><span data-zh-only>下载简历</span>
-          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 4v12m0 0 5-5m-5 5-5-5M5 20h14"/></svg></a>
+                <button class="btn solid" type="button" data-cv><span data-en-only>View CV</span><span data-zh-only>查看简历</span>
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M2 12s3.6-7 10-7 10 7 10 7-3.6 7-10 7S2 12 2 12z"/><circle cx="12" cy="12" r="3"/></svg></button>
         <a class="icon-btn" href="mailto:ywen8019@gmail.com" aria-label="Email"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="m3 7 9 6 9-6"/></svg></a>
       </div>
       <!-- TODO: replace with your own motto -->
@@ -344,6 +433,10 @@ button.work{font:inherit;color:inherit;text-align:left;cursor:pointer;padding:0}
     </div>
   </div>
   <div class="scroll-hint mono"><i></i><span data-en-only>Scroll</span><span data-zh-only>向下</span></div>
+</section>
+
+<section class="strip" aria-label="Projects">
+  <div class="strip-track"><button class="strip-item" type="button" data-project="zone"><img class="s-duo" src="assets/strip/zone-duo.jpg" alt="" loading="lazy"><img class="s-col" src="assets/strip/zone.jpg" alt="" loading="lazy"><span class="s-cap"><i class="mono"><span data-en-only>Immersive</span><span data-zh-only>沉浸体验</span></i>In the Zone</span></button><button class="strip-item" type="button" data-project="sheep"><img class="s-duo" src="assets/strip/sheep-duo.jpg" alt="" loading="lazy"><img class="s-col" src="assets/strip/sheep.jpg" alt="" loading="lazy"><span class="s-cap"><i class="mono"><span data-en-only>Web game</span><span data-zh-only>网页游戏</span></i>Letter of the Flying Sheep</span></button><button class="strip-item" type="button" data-project="death"><img class="s-duo" src="assets/strip/death-duo.jpg" alt="" loading="lazy"><img class="s-col" src="assets/strip/death.jpg" alt="" loading="lazy"><span class="s-cap"><i class="mono"><span data-en-only>Speculative</span><span data-zh-only>思辨设计</span></i>The Fourth Death</span></button><button class="strip-item" type="button" data-project="zero"><img class="s-duo" src="assets/strip/zero-duo.jpg" alt="" loading="lazy"><img class="s-col" src="assets/strip/zero.jpg" alt="" loading="lazy"><span class="s-cap"><i class="mono"><span data-en-only>Game jam</span><span data-zh-only>Game Jam</span></i>零时之塔</span></button><button class="strip-item" type="button" data-project="gluttony"><img class="s-duo" src="assets/strip/gluttony-duo.jpg" alt="" loading="lazy"><img class="s-col" src="assets/strip/gluttony.jpg" alt="" loading="lazy"><span class="s-cap"><i class="mono"><span data-en-only>Critical game</span><span data-zh-only>批判性游戏</span></i>Gluttony Paradise</span></button><button class="strip-item" type="button" data-project="who"><img class="s-duo" src="assets/strip/who-duo.jpg" alt="" loading="lazy"><img class="s-col" src="assets/strip/who.jpg" alt="" loading="lazy"><span class="s-cap"><i class="mono"><span data-en-only>Narrative</span><span data-zh-only>环境叙事</span></i>Who Am I?</span></button><button class="strip-item" type="button" data-project="protagonist"><img class="s-duo" src="assets/strip/protagonist-duo.jpg" alt="" loading="lazy"><img class="s-col" src="assets/strip/protagonist.jpg" alt="" loading="lazy"><span class="s-cap"><i class="mono"><span data-en-only>Installation</span><span data-zh-only>交互装置</span></i>Be Protagonist</span></button><button class="strip-item" type="button" data-project="gold"><img class="s-duo" src="assets/strip/gold-duo.jpg" alt="" loading="lazy"><img class="s-col" src="assets/strip/gold.jpg" alt="" loading="lazy"><span class="s-cap"><i class="mono"><span data-en-only>On Steam</span><span data-zh-only>已上架 Steam</span></i>Hoooook</span></button><button class="strip-item" type="button" data-project="oms"><img class="s-duo" src="assets/strip/oms-duo.jpg" alt="" loading="lazy"><img class="s-col" src="assets/strip/oms.jpg" alt="" loading="lazy"><span class="s-cap"><i class="mono"><span data-en-only>Game jam</span><span data-zh-only>Game Jam</span></i>One More Second</span></button><button class="strip-item" type="button" data-project="dream"><img class="s-duo" src="assets/strip/dream-duo.jpg" alt="" loading="lazy"><img class="s-col" src="assets/strip/dream.jpg" alt="" loading="lazy"><span class="s-cap"><i class="mono"><span data-en-only>Platformer</span><span data-zh-only>平台跳跃</span></i>梦我</span></button><button class="strip-item" type="button" data-project="xianjie"><img class="s-duo" src="assets/strip/xianjie-duo.jpg" alt="" loading="lazy"><img class="s-col" src="assets/strip/xianjie.jpg" alt="" loading="lazy"><span class="s-cap"><i class="mono"><span data-en-only>Roguelite</span><span data-zh-only>肉鸽</span></i>仙界逍遥录</span></button><button class="strip-item" type="button" data-project="oasis"><img class="s-duo" src="assets/strip/oasis-duo.jpg" alt="" loading="lazy"><img class="s-col" src="assets/strip/oasis.jpg" alt="" loading="lazy"><span class="s-cap"><i class="mono"><span data-en-only>Simulation</span><span data-zh-only>模拟经营</span></i>Oasis</span></button><button class="strip-item" type="button" data-project="prompt"><img class="s-duo" src="assets/strip/prompt-duo.jpg" alt="" loading="lazy"><img class="s-col" src="assets/strip/prompt.jpg" alt="" loading="lazy"><span class="s-cap"><i class="mono"><span data-en-only>UX</span><span data-zh-only>UX</span></i>Daily Prompt Helper</span></button><button class="strip-item" type="button" data-project="zone" tabindex="-1" aria-hidden="true"><img class="s-duo" src="assets/strip/zone-duo.jpg" alt="" loading="lazy"><img class="s-col" src="assets/strip/zone.jpg" alt="" loading="lazy"><span class="s-cap"><i class="mono"><span data-en-only>Immersive</span><span data-zh-only>沉浸体验</span></i>In the Zone</span></button><button class="strip-item" type="button" data-project="sheep" tabindex="-1" aria-hidden="true"><img class="s-duo" src="assets/strip/sheep-duo.jpg" alt="" loading="lazy"><img class="s-col" src="assets/strip/sheep.jpg" alt="" loading="lazy"><span class="s-cap"><i class="mono"><span data-en-only>Web game</span><span data-zh-only>网页游戏</span></i>Letter of the Flying Sheep</span></button><button class="strip-item" type="button" data-project="death" tabindex="-1" aria-hidden="true"><img class="s-duo" src="assets/strip/death-duo.jpg" alt="" loading="lazy"><img class="s-col" src="assets/strip/death.jpg" alt="" loading="lazy"><span class="s-cap"><i class="mono"><span data-en-only>Speculative</span><span data-zh-only>思辨设计</span></i>The Fourth Death</span></button><button class="strip-item" type="button" data-project="zero" tabindex="-1" aria-hidden="true"><img class="s-duo" src="assets/strip/zero-duo.jpg" alt="" loading="lazy"><img class="s-col" src="assets/strip/zero.jpg" alt="" loading="lazy"><span class="s-cap"><i class="mono"><span data-en-only>Game jam</span><span data-zh-only>Game Jam</span></i>零时之塔</span></button><button class="strip-item" type="button" data-project="gluttony" tabindex="-1" aria-hidden="true"><img class="s-duo" src="assets/strip/gluttony-duo.jpg" alt="" loading="lazy"><img class="s-col" src="assets/strip/gluttony.jpg" alt="" loading="lazy"><span class="s-cap"><i class="mono"><span data-en-only>Critical game</span><span data-zh-only>批判性游戏</span></i>Gluttony Paradise</span></button><button class="strip-item" type="button" data-project="who" tabindex="-1" aria-hidden="true"><img class="s-duo" src="assets/strip/who-duo.jpg" alt="" loading="lazy"><img class="s-col" src="assets/strip/who.jpg" alt="" loading="lazy"><span class="s-cap"><i class="mono"><span data-en-only>Narrative</span><span data-zh-only>环境叙事</span></i>Who Am I?</span></button><button class="strip-item" type="button" data-project="protagonist" tabindex="-1" aria-hidden="true"><img class="s-duo" src="assets/strip/protagonist-duo.jpg" alt="" loading="lazy"><img class="s-col" src="assets/strip/protagonist.jpg" alt="" loading="lazy"><span class="s-cap"><i class="mono"><span data-en-only>Installation</span><span data-zh-only>交互装置</span></i>Be Protagonist</span></button><button class="strip-item" type="button" data-project="gold" tabindex="-1" aria-hidden="true"><img class="s-duo" src="assets/strip/gold-duo.jpg" alt="" loading="lazy"><img class="s-col" src="assets/strip/gold.jpg" alt="" loading="lazy"><span class="s-cap"><i class="mono"><span data-en-only>On Steam</span><span data-zh-only>已上架 Steam</span></i>Hoooook</span></button><button class="strip-item" type="button" data-project="oms" tabindex="-1" aria-hidden="true"><img class="s-duo" src="assets/strip/oms-duo.jpg" alt="" loading="lazy"><img class="s-col" src="assets/strip/oms.jpg" alt="" loading="lazy"><span class="s-cap"><i class="mono"><span data-en-only>Game jam</span><span data-zh-only>Game Jam</span></i>One More Second</span></button><button class="strip-item" type="button" data-project="dream" tabindex="-1" aria-hidden="true"><img class="s-duo" src="assets/strip/dream-duo.jpg" alt="" loading="lazy"><img class="s-col" src="assets/strip/dream.jpg" alt="" loading="lazy"><span class="s-cap"><i class="mono"><span data-en-only>Platformer</span><span data-zh-only>平台跳跃</span></i>梦我</span></button><button class="strip-item" type="button" data-project="xianjie" tabindex="-1" aria-hidden="true"><img class="s-duo" src="assets/strip/xianjie-duo.jpg" alt="" loading="lazy"><img class="s-col" src="assets/strip/xianjie.jpg" alt="" loading="lazy"><span class="s-cap"><i class="mono"><span data-en-only>Roguelite</span><span data-zh-only>肉鸽</span></i>仙界逍遥录</span></button><button class="strip-item" type="button" data-project="oasis" tabindex="-1" aria-hidden="true"><img class="s-duo" src="assets/strip/oasis-duo.jpg" alt="" loading="lazy"><img class="s-col" src="assets/strip/oasis.jpg" alt="" loading="lazy"><span class="s-cap"><i class="mono"><span data-en-only>Simulation</span><span data-zh-only>模拟经营</span></i>Oasis</span></button><button class="strip-item" type="button" data-project="prompt" tabindex="-1" aria-hidden="true"><img class="s-duo" src="assets/strip/prompt-duo.jpg" alt="" loading="lazy"><img class="s-col" src="assets/strip/prompt.jpg" alt="" loading="lazy"><span class="s-cap"><i class="mono"><span data-en-only>UX</span><span data-zh-only>UX</span></i>Daily Prompt Helper</span></button></div>
 </section>
 
 <!-- ================= EDUCATION ================= -->
@@ -360,11 +453,10 @@ button.work{font:inherit;color:inherit;text-align:left;cursor:pointer;padding:0}
     <h3><span data-en-only>University of the Arts London</span><span data-zh-only>伦敦艺术大学</span></h3>
     <div class="scene-sub"><span data-en-only>MA Games Design</span><span data-zh-only>游戏设计 硕士</span></div>
     <div class="mono scene-where"><span data-en-only>London · United Kingdom</span><span data-zh-only>英国 · 伦敦</span></div>
-      <p class="scene-course"><span data-en-only>Design &amp; Prototyping · Understanding Play · Critical Play &amp; Development</span><span data-zh-only>设计与原型 · 理解游戏性 · 批判性游戏与开发</span></p>
   </div>
   <div class="scene-art" aria-hidden="true">
-    <img class="sc-back" src="assets/scenes/london-back.svg" alt="" loading="lazy">
-    <img class="sc-front" src="assets/scenes/london-front.svg" alt="" loading="lazy">
+    <img class="sc-back" src="assets/scenes/london-back.svg" alt="" decoding="async">
+    <img class="sc-front" src="assets/scenes/london-front.svg" alt="" decoding="async">
     <span class="mono scene-cap"><span data-en-only>The Thames · London Eye · Tower Bridge · Westminster</span><span data-zh-only>泰晤士河 · 伦敦眼 · 塔桥 · 威斯敏斯特</span></span>
   </div>
 </div>
@@ -374,11 +466,10 @@ button.work{font:inherit;color:inherit;text-align:left;cursor:pointer;padding:0}
     <h3><span data-en-only>Guangzhou Academy of Fine Arts</span><span data-zh-only>广州美术学院</span></h3>
     <div class="scene-sub"><span data-en-only>BA Interaction Design</span><span data-zh-only>交互设计 学士</span></div>
     <div class="mono scene-where"><span data-en-only>Guangzhou · China</span><span data-zh-only>中国 · 广州</span></div>
-      <p class="scene-course"><span data-en-only>Advanced User Research · Information &amp; Visualisation · Design Thinking · Ergonomics</span><span data-zh-only>高级用户研究 · 信息与可视化 · 设计思维 · 人机工程学</span></p>
   </div>
   <div class="scene-art" aria-hidden="true">
-    <img class="sc-back" src="assets/scenes/guangzhou-back.svg" alt="" loading="lazy">
-    <img class="sc-front" src="assets/scenes/guangzhou-front.svg" alt="" loading="lazy">
+    <img class="sc-back" src="assets/scenes/guangzhou-back.svg" alt="" decoding="async">
+    <img class="sc-front" src="assets/scenes/guangzhou-front.svg" alt="" decoding="async">
     <span class="mono scene-cap"><span data-en-only>Pearl River · Canton Tower · Opera House</span><span data-zh-only>珠江 · 广州塔 · 大剧院</span></span>
   </div>
 </div>
@@ -401,8 +492,8 @@ button.work{font:inherit;color:inherit;text-align:left;cursor:pointer;padding:0}
     <div class="mono scene-where"><span data-en-only>Hangzhou · China</span><span data-zh-only>中国 · 杭州</span></div>
   </div>
   <div class="scene-art" aria-hidden="true">
-    <img class="sc-back" src="assets/scenes/hangzhou-back.svg" alt="" loading="lazy">
-    <img class="sc-front" src="assets/scenes/hangzhou-front.svg" alt="" loading="lazy">
+    <img class="sc-back" src="assets/scenes/hangzhou-back.svg" alt="" decoding="async">
+    <img class="sc-front" src="assets/scenes/hangzhou-front.svg" alt="" decoding="async">
     <span class="mono scene-cap"><span data-en-only>West Lake · Leifeng Pagoda · Broken Bridge</span><span data-zh-only>西湖 · 雷峰塔 · 断桥</span></span>
   </div>
 </div>
@@ -417,13 +508,11 @@ button.work{font:inherit;color:inherit;text-align:left;cursor:pointer;padding:0}
       <div>
         <div class="xp-role reveal"><span data-en-only>Gaming Interaction Design Intern</span><span data-zh-only>游戏交互设计实习生</span></div>
         <div class="xp-items">
-          <div class="xp-item reveal"><h4><span data-en-only>Interaction Design</span><span data-zh-only>交互设计</span></h4>
-            <p><span data-en-only>Designed task flows for Identity V’s systems, events and in-game shop around player expectations and established patterns; built annotated Figma prototypes covering screen transitions, decision points and alternative flows for the development team.</span><span data-zh-only>基于玩家预期与成熟交互范式，为《第五人格》的系统、活动及商城设计任务流程；输出带标注的 Figma 原型，明确页面跳转、决策节点与分支流程，向开发团队准确传达交互意图。</span></p></div>
-          <div class="xp-item reveal"><h4><span data-en-only>Usability Testing</span><span data-zh-only>可用性测试</span></h4>
-            <p><span data-en-only>Ran usability tests and analysed player feedback, logging task completion, navigation errors and hesitation points; prioritised findings by severity, refined flows and validated revised prototypes with players before release.</span><span data-zh-only>组织可用性测试并分析玩家反馈，记录任务完成率、导航错误与犹豫节点；按严重程度排序问题，迭代交互流程，并在上线前与玩家验证修订后的原型。</span></p></div>
-          <div class="xp-item reveal"><h4><span data-en-only>Design QA</span><span data-zh-only>设计走查</span></h4>
-            <p><span data-en-only>Coordinated handoff with game designers, UI artists and engineers; reviewed builds against specs for edge cases, visual consistency, missing component states and wrong transitions, tracking each issue to resolution before updates went live.</span><span data-zh-only>与策划、UI 美术及程序协作完成设计交付；对照交互规范走查开发版本，检查边界情况、视觉一致性、组件状态缺失与跳转错误，并跟踪问题直至版本上线前全部解决。</span></p></div>
+          <div class="xp-item reveal"><h4><span data-en-only>Interaction Design</span><span data-zh-only>交互设计</span></h4><div><p class="xp-key"><span data-en-only>Task flows and annotated Figma prototypes for systems, events and the shop</span><span data-zh-only>为系统、活动和商城设计任务流与带标注的 Figma 原型</span></p><p class="xp-more"><span data-en-only>Designed task flows for Identity V’s systems, events and in-game shop around player expectations and established patterns; built annotated Figma prototypes covering screen transitions, decision points and alternative flows for the development team.</span><span data-zh-only>基于玩家预期与成熟交互范式，为《第五人格》的系统、活动及商城设计任务流程；输出带标注的 Figma 原型，明确页面跳转、决策节点与分支流程，向开发团队准确传达交互意图。</span></p></div></div>
+          <div class="xp-item reveal"><h4><span data-en-only>Usability Testing</span><span data-zh-only>可用性测试</span></h4><div><p class="xp-key"><span data-en-only>Player tests, severity-ranked fixes, re-validated before release</span><span data-zh-only>玩家测试，按严重度排序修改，上线前再次验证</span></p><p class="xp-more"><span data-en-only>Ran usability tests and analysed player feedback, logging task completion, navigation errors and hesitation points; prioritised findings by severity, refined flows and validated revised prototypes with players before release.</span><span data-zh-only>组织可用性测试并分析玩家反馈，记录任务完成率、导航错误与犹豫节点；按严重程度排序问题，迭代交互流程，并在上线前与玩家验证修订后的原型。</span></p></div></div>
+          <div class="xp-item reveal"><h4><span data-en-only>Design QA</span><span data-zh-only>设计走查</span></h4><div><p class="xp-key"><span data-en-only>Reviewed builds against spec and tracked every issue to closure</span><span data-zh-only>对照规范走查版本，每个问题跟踪到关闭</span></p><p class="xp-more"><span data-en-only>Coordinated handoff with game designers, UI artists and engineers; reviewed builds against specs for edge cases, visual consistency, missing component states and wrong transitions, tracking each issue to resolution before updates went live.</span><span data-zh-only>与策划、UI 美术及程序协作完成设计交付；对照交互规范走查开发版本，检查边界情况、视觉一致性、组件状态缺失与跳转错误，并跟踪问题直至版本上线前全部解决。</span></p></div></div>
         </div>
+        <button class="xp-toggle mono" type="button" aria-expanded="false"><span data-en-only>Show details</span><span data-zh-only>展开详情</span></button>
       </div>
     </div>
   </div>
@@ -435,8 +524,8 @@ button.work{font:inherit;color:inherit;text-align:left;cursor:pointer;padding:0}
     <div class="mono scene-where"><span data-en-only>Guangzhou · China</span><span data-zh-only>中国 · 广州</span></div>
   </div>
   <div class="scene-art" aria-hidden="true">
-    <img class="sc-back" src="assets/scenes/qilou-back.svg" alt="" loading="lazy">
-    <img class="sc-front" src="assets/scenes/qilou-front.svg" alt="" loading="lazy">
+    <img class="sc-back" src="assets/scenes/qilou-back.svg" alt="" decoding="async">
+    <img class="sc-front" src="assets/scenes/qilou-front.svg" alt="" decoding="async">
     <span class="mono scene-cap"><span data-en-only>Qilou arcades of old Guangzhou</span><span data-zh-only>广州 · 骑楼老街</span></span>
   </div>
 </div>
@@ -451,13 +540,11 @@ button.work{font:inherit;color:inherit;text-align:left;cursor:pointer;padding:0}
       <div>
         <div class="xp-role reveal"><span data-en-only>Gaming Interaction Design Intern</span><span data-zh-only>游戏交互设计实习生</span></div>
         <div class="xp-items">
-          <div class="xp-item reveal"><h4><span data-en-only>Information Architecture</span><span data-zh-only>信息架构</span></h4>
-            <p><span data-en-only>Analysed player tasks to reorganise feature groups and navigation hierarchy; surfaced frequent actions, consolidated redundant entry points and shortened paths to improve findability and cut interaction cost.</span><span data-zh-only>分析玩家任务，重组功能分组与导航层级；前置高频操作、合并冗余入口、缩短操作路径，提升功能可发现性并降低交互成本。</span></p></div>
-          <div class="xp-item reveal"><h4><span data-en-only>UI Specifications</span><span data-zh-only>交互规范</span></h4>
-            <p><span data-en-only>Defined patterns for controls, modals and system messages — default, selected, disabled, loading and error states, feedback, and animation duration &amp; easing — in shared specs that kept interactions consistent across systems.</span><span data-zh-only>制定控件、弹窗与系统提示的交互范式，明确默认、选中、禁用、加载与报错等状态，以及反馈形式和动效时长与曲线，沉淀为共享规范，保证各系统交互一致。</span></p></div>
-          <div class="xp-item reveal"><h4><span data-en-only>UX Optimisation</span><span data-zh-only>体验优化</span></h4>
-            <p><span data-en-only>Audited legacy interfaces through heuristic evaluation and proposed redesigns that respected player habits, game rules and technical limits; scoped changes with designers and delivered annotated specs for the update.</span><span data-zh-only>以启发式评估审视旧版界面，在尊重玩家习惯、游戏规则与技术约束的前提下提出改版方案；与策划确定改动范围，交付带标注的交互方案用于版本更新。</span></p></div>
+          <div class="xp-item reveal"><h4><span data-en-only>Information Architecture</span><span data-zh-only>信息架构</span></h4><div><p class="xp-key"><span data-en-only>Regrouped features, merged entry points, shorter paths</span><span data-zh-only>重组功能分组，合并入口，缩短路径</span></p><p class="xp-more"><span data-en-only>Analysed player tasks to reorganise feature groups and navigation hierarchy; surfaced frequent actions, consolidated redundant entry points and shortened paths to improve findability and cut interaction cost.</span><span data-zh-only>分析玩家任务，重组功能分组与导航层级；前置高频操作、合并冗余入口、缩短操作路径，提升功能可发现性并降低交互成本。</span></p></div></div>
+          <div class="xp-item reveal"><h4><span data-en-only>UI Specifications</span><span data-zh-only>交互规范</span></h4><div><p class="xp-key"><span data-en-only>Shared specs for states, feedback and motion</span><span data-zh-only>统一控件状态、反馈与动效规范</span></p><p class="xp-more"><span data-en-only>Defined patterns for controls, modals and system messages — default, selected, disabled, loading and error states, feedback, and animation duration &amp; easing — in shared specs that kept interactions consistent across systems.</span><span data-zh-only>制定控件、弹窗与系统提示的交互范式，明确默认、选中、禁用、加载与报错等状态，以及反馈形式和动效时长与曲线，沉淀为共享规范，保证各系统交互一致。</span></p></div></div>
+          <div class="xp-item reveal"><h4><span data-en-only>UX Optimisation</span><span data-zh-only>体验优化</span></h4><div><p class="xp-key"><span data-en-only>Heuristic audit to redesigns shipped in the update</span><span data-zh-only>启发式评估，改版方案随版本上线</span></p><p class="xp-more"><span data-en-only>Audited legacy interfaces through heuristic evaluation and proposed redesigns that respected player habits, game rules and technical limits; scoped changes with designers and delivered annotated specs for the update.</span><span data-zh-only>以启发式评估审视旧版界面，在尊重玩家习惯、游戏规则与技术约束的前提下提出改版方案；与策划确定改动范围，交付带标注的交互方案用于版本更新。</span></p></div></div>
         </div>
+        <button class="xp-toggle mono" type="button" aria-expanded="false"><span data-en-only>Show details</span><span data-zh-only>展开详情</span></button>
       </div>
     </div>
   </div>
@@ -477,7 +564,6 @@ button.work{font:inherit;color:inherit;text-align:left;cursor:pointer;padding:0}
         <div class="work-body">
           <div class="work-tags"><span class="tag">Immersive Experience</span><span class="tag">Unity</span><span class="tag">Level Design</span><span class="tag">VR</span></div>
           <h3>In the Zone<span data-zh-only class="zh-sub"> · 心流之境</span></h3>
-          <p><span data-en-only>Recreating the time-stopping immersion shared by extreme sports and falling in love — a six-level immersive Unity experience linked by wormholes.</span><span data-zh-only>将极限运动与恋爱中共有的“忘我”状态，转化为由“虫洞”串联的六关沉浸式 Unity 体验。</span></p>
         </div>
       </button>
       <button class="work  reveal" data-project="death">
@@ -486,7 +572,6 @@ button.work{font:inherit;color:inherit;text-align:left;cursor:pointer;padding:0}
         <div class="work-body">
           <div class="work-tags"><span class="tag">Speculative Design</span><span class="tag">Worldbuilding</span><span class="tag">Animation</span></div>
           <h3>The Fourth Death<span data-zh-only class="zh-sub"> · 第四次死亡</span></h3>
-          <p><span data-en-only>A speculative case file on the industrialisation of regret: a fictional “Chrono-Agent” pill, four crime scenes and an art-narrative film.</span><span data-zh-only>关于“后悔”被产业化的思辨设计：虚构的“后悔药”、四个案发现场与一部艺术叙事短片。</span></p>
         </div>
       </button>
       <button class="work  reveal" data-project="gluttony">
@@ -495,7 +580,6 @@ button.work{font:inherit;color:inherit;text-align:left;cursor:pointer;padding:0}
         <div class="work-body">
           <div class="work-tags"><span class="tag">Critical Game</span><span class="tag">Unity</span><span class="tag">AI NPC</span></div>
           <h3>Gluttony Paradise<span data-zh-only class="zh-sub"> · 暴食乐园</span></h3>
-          <p><span data-en-only>A candy-coloured critical game that simulates binge eating, mapping anxiety → relief → repetition onto cycles of consumption.</span><span data-zh-only>一款模拟暴食的批判性游戏，把“焦虑 → 缓解 → 再循环”映射为消费主义的闭环。</span></p>
         </div>
       </button>
       <button class="work wide reveal" data-project="protagonist">
@@ -504,9 +588,79 @@ button.work{font:inherit;color:inherit;text-align:left;cursor:pointer;padding:0}
         <div class="work-body">
           <div class="work-tags"><span class="tag">Interactive Installation</span><span class="tag">TouchDesigner</span><span class="tag">Gesture & Face Tracking</span><span class="tag">3D Printing</span></div>
           <h3>Be Protagonist<span data-zh-only class="zh-sub"> · 成为主角</span></h3>
-          <p><span data-en-only>An installation answering “NPC mentality”: participants design facial armour by gesture and leave with a 3D-printed protagonist ID card.</span><span data-zh-only>回应“NPC 心态”的交互装置：参与者用手势设计专属“面甲”，并带走一张 3D 打印的主角身份卡。</span></p>
         </div>
       </button>
+    </div>
+    <div class="more">
+      <div class="more-head reveal">
+        <h3><span data-en-only>More <em>projects</em></span><span data-zh-only>更多<em>作品</em></span></h3>
+        <p><span data-en-only>Game jams, small prototypes and one UX study.</span><span data-zh-only>Game Jam、练手原型与一个 UX 练习。</span></p>
+      </div>
+      <div class="mini-grid">
+      <button class="mini reveal" data-project="sheep">
+        <div class="mini-img"><img src="assets/more/sheep-cover.jpg" alt="Letter of the Flying Sheep" loading="lazy"><span class="mini-badge"><span data-en-only>♡ For Mom</span><span data-zh-only>♡ 献给妈妈</span></span></div>
+        <div class="mini-body">
+          <span class="mono mini-kind"><span data-en-only>Web game · Birthday gift</span><span data-zh-only>网页游戏 · 生日礼物</span></span>
+          <h4>Letter of the Flying Sheep</h4>
+        </div>
+      </button>
+      <button class="mini reveal" data-project="zero">
+        <div class="mini-img"><img src="assets/more/zero-cover.jpg" alt="零时之塔" loading="lazy"></div>
+        <div class="mini-body">
+          <span class="mono mini-kind"><span data-en-only>Team · TapTap Spotlight Jam 2026</span><span data-zh-only>团队 · TapTap 聚光灯 Game Jam 2026</span></span>
+          <h4>零时之塔</h4>
+        </div>
+      </button>
+      <button class="mini reveal" data-project="who">
+        <div class="mini-img"><img src="assets/more/who-cover.jpg" alt="Who Am I?" loading="lazy"><span class="mini-badge"><span data-en-only>▶ Video</span><span data-zh-only>▶ 视频</span></span></div>
+        <div class="mini-body">
+          <span class="mono mini-kind"><span data-en-only>Team · MA Games Design, LCC</span><span data-zh-only>团队 · 伦敦传媒学院游戏设计硕士</span></span>
+          <h4>Who Am I?</h4>
+        </div>
+      </button>
+      <button class="mini reveal" data-project="oms">
+        <div class="mini-img"><img src="assets/more/oms-cover.jpg" alt="One More Second" loading="lazy"></div>
+        <div class="mini-body">
+          <span class="mono mini-kind"><span data-en-only>Team · GMTK Game Jam 2026</span><span data-zh-only>团队 · GMTK Game Jam 2026</span></span>
+          <h4>One More Second</h4>
+        </div>
+      </button>
+      <button class="mini reveal" data-project="gold">
+        <div class="mini-img"><img src="assets/more/gold-cover.jpg" alt="Hoooook" loading="lazy"><span class="mini-badge steam">Steam</span></div>
+        <div class="mini-body">
+          <span class="mono mini-kind"><span data-en-only>On Steam · Gold-miner × Roguelite</span><span data-zh-only>已上架 Steam · 黄金矿工 × 肉鸽</span></span>
+          <h4>Hoooook</h4>
+        </div>
+      </button>
+      <button class="mini reveal" data-project="dream">
+        <div class="mini-img"><img src="assets/more/dream-cover.jpg" alt="梦我" loading="lazy"></div>
+        <div class="mini-body">
+          <span class="mono mini-kind"><span data-en-only>Team lead · 2D platformer</span><span data-zh-only>团队组长 · 2D 平台跳跃</span></span>
+          <h4>梦我</h4>
+        </div>
+      </button>
+      <button class="mini reveal" data-project="xianjie">
+        <div class="mini-img"><img src="assets/more/xianjie-cover.jpg" alt="仙界逍遥录" loading="lazy"></div>
+        <div class="mini-body">
+          <span class="mono mini-kind"><span data-en-only>Solo · Roguelite</span><span data-zh-only>个人项目 · 肉鸽</span></span>
+          <h4>仙界逍遥录</h4>
+        </div>
+      </button>
+      <button class="mini reveal" data-project="oasis">
+        <div class="mini-img"><img src="assets/more/oasis-cover.jpg" alt="Oasis" loading="lazy"></div>
+        <div class="mini-body">
+          <span class="mono mini-kind"><span data-en-only>Solo · City-building sim</span><span data-zh-only>个人项目 · 模拟经营</span></span>
+          <h4>Oasis</h4>
+        </div>
+      </button>
+      <button class="mini reveal" data-project="prompt">
+        <div class="mini-img"><img src="assets/more/prompt-cover.jpg" alt="Daily Prompt Helper" loading="lazy"></div>
+        <div class="mini-body">
+          <span class="mono mini-kind"><span data-en-only>UX study · Non-game</span><span data-zh-only>UX 练习 · 非游戏</span></span>
+          <h4>Daily Prompt Helper</h4>
+        </div>
+      </button>
+      </div>
     </div>
   </div>
 </section>
@@ -537,10 +691,10 @@ button.work{font:inherit;color:inherit;text-align:left;cursor:pointer;padding:0}
     </div>
 
     <div class="beyond reveal">
-      <div class="by"><div class="n">10</div><h4><span data-en-only>Piano · Level 10</span><span data-zh-only>钢琴 · 十级</span></h4><p><span data-en-only>Rhythm and timing, carried into motion design.</span><span data-zh-only>把节奏感带进动效设计。</span></p></div>
-      <div class="by"><div class="n">Hip&#8209;hop</div><h4><span data-en-only>Street Dance Captain</span><span data-zh-only>校街舞队 Hip-hop 队长</span></h4><p>2022 — 2023</p></div>
-      <div class="by"><div class="n">2 yrs</div><h4><span data-en-only>School Basketball Team</span><span data-zh-only>校篮球队</span></h4><p>2021 — 2023</p></div>
-      <div class="by"><div class="n">∞</div><h4><span data-en-only>Also</span><span data-zh-only>其他爱好</span></h4><p><span data-en-only>Hiking, climbing, drawing, calligraphy, travel.</span><span data-zh-only>徒步、攀岩、绘画、书法、旅行。</span></p></div>
+      <div class="by"><div class="n">10</div><h4><span data-en-only>Piano · Level 10</span><span data-zh-only>钢琴 · 十级</span></h4></div>
+      <div class="by"><div class="n">Hip&#8209;hop</div><h4><span data-en-only>Street Dance Captain</span><span data-zh-only>校街舞队 Hip-hop 队长</span></h4></div>
+      <div class="by"><div class="n">2 yrs</div><h4><span data-en-only>School Basketball Team</span><span data-zh-only>校篮球队</span></h4></div>
+      <div class="by"><div class="n">∞</div><h4><span data-en-only>Also</span><span data-zh-only>其他爱好</span></h4></div>
     </div>
   </div>
 </section>
@@ -552,7 +706,7 @@ button.work{font:inherit;color:inherit;text-align:left;cursor:pointer;padding:0}
     <h2 class="reveal"><span data-en-only>Let’s make<br><em>something playable.</em></span><span data-zh-only>一起做点<br><em>好玩的东西。</em></span></h2>
     <a class="mail reveal" href="mailto:ywen8019@gmail.com">ywen8019@gmail.com</a>
     <div class="hero-cta reveal">
-      <a class="btn solid" href="Yangfan_Wen_CV.pdf" download><span data-en-only>Download CV</span><span data-zh-only>下载简历</span></a>
+      <button class="btn solid" type="button" data-cv><span data-en-only>View CV</span><span data-zh-only>查看简历</span></button>
     </div>
     <footer class="mono">
       <span>© 2026 Yangfan Wen</span>
@@ -563,13 +717,19 @@ button.work{font:inherit;color:inherit;text-align:left;cursor:pointer;padding:0}
 </section>
 </main>
 
+<!-- ================= VIEWER (CV / game) ================= -->
+<div class="viewer" id="viewer" hidden role="dialog" aria-modal="true" aria-labelledby="viewerTitle">
+  <div class="viewer-bar"><span class="mono" id="viewerTitle"></span><div class="viewer-actions" id="viewerActions"></div><button class="viewer-close" id="viewerClose" type="button" aria-label="Close">✕</button></div>
+  <div class="viewer-body" id="viewerBody"></div>
+</div>
+
 <!-- ================= PROJECT MODAL ================= -->
 <div class="pm" id="pm" role="dialog" aria-modal="true" aria-labelledby="pmTitle">
   <button class="pm-close" id="pmClose" aria-label="Close">✕</button>
   <div class="pm-inner">
     <div class="pm-head">
       <div><span class="mono" id="pmNum"></span><h2 id="pmTitle"></h2></div>
-      <div><p class="pm-desc" id="pmDesc"></p><div class="pm-meta" id="pmTags"></div><div class="pm-videos" id="pmVideos"></div></div>
+      <div><p class="pm-desc" id="pmDesc"></p><div class="pm-meta" id="pmTags"></div><div class="pm-videos" id="pmVideos"></div><p class="pm-note mono" id="pmNote" hidden></p></div>
     </div>
     <div class="pm-pages" id="pmPages"></div>
     <div class="pm-nav"><button id="pmPrev"></button><button id="pmNext"></button></div>
@@ -655,50 +815,68 @@ const links=[...document.querySelectorAll('.nav-links a')];
 const map={about:'about',education:'about',experience:'experience',work:'work',skills:'skills',contact:'contact'};
 const so=new IntersectionObserver(es=>es.forEach(e=>{if(e.isIntersecting){const id=map[e.target.id];links.forEach(a=>a.classList.toggle('active',a.getAttribute('href')==='#'+id))}}),{rootMargin:'-45% 0px -50% 0px'});
 document.querySelectorAll('section[id]').forEach(s=>so.observe(s));
-/* ---------- scenes: reveal + parallax ---------- */
+/* ---------- scenes: reveal + eased parallax ---------- */
 const scenes=[...document.querySelectorAll('.scene')];
-const sio=new IntersectionObserver(es=>es.forEach(e=>{if(e.isIntersecting){e.target.classList.add('in');sio.unobserve(e.target)}}),{threshold:.2});
+const ready=sc=>Promise.all([...sc.querySelectorAll('img')].map(im=>im.decode?im.decode().catch(()=>{}):Promise.resolve()));
+const sio=new IntersectionObserver(es=>es.forEach(e=>{if(e.isIntersecting){sio.unobserve(e.target);ready(e.target).then(()=>requestAnimationFrame(()=>e.target.classList.add('in')))}}),{threshold:.18,rootMargin:'0px 0px -8% 0px'});
 scenes.forEach(sc=>sio.observe(sc));
-if(!reduce){let ticking=false;
-  const upd=()=>{ticking=false;scenes.forEach(sc=>{const r=sc.getBoundingClientRect();if(r.bottom<0||r.top>innerHeight)return;
-    const p=(r.top+r.height/2-innerHeight/2)/innerHeight;sc.querySelector('.sc-back').style.transform=`translateY(${(p*70).toFixed(1)}px) scale(1.06)`})};
-  addEventListener('scroll',()=>{if(!ticking){ticking=true;requestAnimationFrame(upd)}},{passive:true});upd()}
+if(!reduce){
+  const st=scenes.map(sc=>({sc,b:sc.querySelector('.sc-back'),f:sc.querySelector('.sc-front'),t:sc.querySelector('.scene-text'),cur:null,vis:false}));
+  const vio=new IntersectionObserver(es=>es.forEach(e=>{const o=st.find(x=>x.sc===e.target);o.vis=e.isIntersecting;if(o.vis)kick()}),{rootMargin:'20% 0px'});
+  st.forEach(o=>vio.observe(o.sc));
+  let running=false;
+  const target=o=>{const r=o.sc.getBoundingClientRect();return Math.max(-1.2,Math.min(1.2,(r.top+r.height/2-innerHeight/2)/innerHeight))};
+  const apply=o=>{const p=o.cur;
+    o.b.style.transform=`translate3d(0,${(p*150).toFixed(2)}px,0) scale(1.12)`;
+    o.f.style.transform=`translate3d(0,${(p*-40).toFixed(2)}px,0)`;
+    o.t.style.transform=`translate3d(0,${(p*-60).toFixed(2)}px,0)`};
+  const frame=()=>{let moving=false;
+    st.forEach(o=>{if(!o.vis)return;const t=target(o);if(o.cur===null)o.cur=t;const d=t-o.cur;
+      if(Math.abs(d)>.0005){o.cur+=d*.09;moving=true}else o.cur=t;apply(o)});
+    if(moving)requestAnimationFrame(frame);else running=false};
+  function kick(){if(!running){running=true;requestAnimationFrame(frame)}}
+  addEventListener('scroll',kick,{passive:true});addEventListener('resize',kick);kick()}
 else scenes.forEach(sc=>sc.classList.add('in'));
 /* ---------- project modal ---------- */
+const GH_REPO='ywen8019-tech/wynnyang.github.io'; // where the WhoAmI installers are published as a Release
 const PROJECTS={
-  zone:{n:'01',en:'In the Zone',zh:'心流之境',pages:[1,2,3,4,5],
+  zone:{n:'01',en:'In the Zone',zh:'心流之境',imgs:['assets/work/p01.jpg','assets/work/p02.jpg','assets/work/p03.jpg','assets/work/p04.jpg','assets/work/p05.jpg'],
     tags:['Immersive Experience','Unity','C#','Level Design','VR','Body Storming'],
     den:'While skiing with my partner I experienced a state of complete, self-forgetting focus — strikingly similar to falling in love. I call it “in the zone” rather than “flow”, to stress its distortion of time and space. Through interviews with 20 extreme-sports enthusiasts, body storming and moodboards, I translated its stages into six Unity levels — floating, tunnels, rolling balls and more — connected by “wormholes”, guiding participants through movement, emotion and perception.',
     dzh:'和伴侣滑雪时，我体验到一种高度沉浸、忘我的专注——与恋爱中的感受惊人地相似。我称之为“in the zone”而非“心流”，以强调它对时间与空间的扭曲。通过对 20 位极限运动爱好者的访谈、身体风暴与情绪板，我将这一状态的各个阶段转化为六个 Unity 关卡（漂浮、隧道、滚球等），并以“虫洞”相连，引导参与者在运动、情绪与感知中重新体验“忘我”。',
-    videos:[['Showcase · YouTube','https://youtu.be/1zl_6Zqlujo'],['Showcase · Vimeo','https://vimeo.com/1133417435'],['Process · YouTube','https://youtu.be/0w9tn2J0AhU'],['Process · Vimeo','https://vimeo.com/1133388405']]},
-  death:{n:'02',en:'The Fourth Death',zh:'第四次死亡',pages:[6,7,8,9,10],
+    links:[['Showcase · YouTube','https://youtu.be/1zl_6Zqlujo'],['Showcase · Vimeo','https://vimeo.com/1133417435'],['Process · YouTube','https://youtu.be/0w9tn2J0AhU'],['Process · Vimeo','https://vimeo.com/1133388405']]},
+  death:{n:'02',en:'The Fourth Death',zh:'第四次死亡',imgs:['assets/work/p06.jpg','assets/work/p07.jpg','assets/work/p08.jpg','assets/work/p09.jpg','assets/work/p10.jpg'],
     tags:['Speculative Design','Worldview Script','Digital Animation','Narrative Design'],
     den:'A speculative design investigation into the industrialisation of regret. A fictional company sells the “Chrono-Agent” — a pill promising time reversal — and a crime-scene installation reveals how remorse is commodified. Four scenarios (a casino, the stock market, a cosmetic clinic and an exam hall) show that excessive consumption traps users inside regret itself. Includes an online survey on regret, an industry-chain analysis, the drug and brand system, and an art-narrative film.',
     dzh:'一项关于“后悔”被产业化的思辨设计。虚构的公司售卖号称能让时间倒流的“Chrono-Agent”后悔药，并以案发现场式的装置揭示悔恨如何被商品化。赌场、股市、整形诊所与考场四个场景表明：过度消费最终让人困在后悔本身。项目包含关于后悔的线上调研、产业链分析、药物与品牌系统设计，以及一部艺术叙事短片。',
-    videos:[['Film · Vimeo','https://vimeo.com/1146518482'],['Film · YouTube','https://youtu.be/8FwmL-GGwm8']]},
-  gluttony:{n:'03',en:'Gluttony Paradise',zh:'暴食乐园',pages:[11,12,13,14,15],
+    links:[['Film · Vimeo','https://vimeo.com/1146518482'],['Film · YouTube','https://youtu.be/8FwmL-GGwm8']]},
+  gluttony:{n:'03',en:'Gluttony Paradise',zh:'暴食乐园',imgs:['assets/work/p11.jpg','assets/work/p12.jpg','assets/work/p13.jpg','assets/work/p14.jpg','assets/work/p15.jpg'],
     tags:['Critical Game Design','Unity','AI Dialogue','Toon Shading','Playtesting'],
     den:'An immersive game that simulates binge eating, drawn from personal experience. In a candy-coloured town players can eat without limit — until they are caught in the loop of anxiety → eating for relief → binge → repeat, mirroring the capitalist cycle of manufactured desire and brief satisfaction. Features an anxiety meter, AI-driven NPC dialogue, metaphorical food architecture, a shader-based visual shift into the binge state, and playtest-driven reflection.',
     dzh:'一款源于个人经历、模拟暴食的沉浸式游戏。玩家在糖果色小镇中可以无限进食，却逐渐陷入“焦虑 → 进食缓解 → 暴食 → 再循环”的陷阱，映射资本主义中“制造欲望—短暂满足—更深焦虑”的循环。包含焦虑值系统、AI 驱动的 NPC 对话、带隐喻的食物建筑、进入暴食状态时的着色器视觉转换，以及基于试玩的反思与迭代。',
-    videos:[['Showcase · Vimeo','https://vimeo.com/1146351911'],['Showcase · YouTube','https://youtu.be/FIKNKOmD068'],['Process · Vimeo','https://vimeo.com/1146349151'],['Process · YouTube','https://youtu.be/0HQGpsshzZk']]},
-  protagonist:{n:'04',en:'Be Protagonist',zh:'成为主角',pages:[16,17,18,19],
+    links:[['Showcase · Vimeo','https://vimeo.com/1146351911'],['Showcase · YouTube','https://youtu.be/FIKNKOmD068'],['Process · Vimeo','https://vimeo.com/1146349151'],['Process · YouTube','https://youtu.be/0HQGpsshzZk']]},
+  protagonist:{n:'04',en:'Be Protagonist',zh:'成为主角',imgs:['assets/work/p16.jpg','assets/work/p17.jpg','assets/work/p18.jpg','assets/work/p19.jpg'],
     tags:['Interactive Installation','TouchDesigner','Gesture Interaction','Facial Tracking','Gemini API','3D Printing'],
     den:'An interactive installation responding to the “NPC mentality” and loss of self-worth among young people. Framed as a character-creation screen in the game “Earth Online”, participants use gestures to design a personal facial armour on a large screen. A Gemini-powered pipeline then turns their capture into a 3D model, and they leave with a 3D-printed protagonist ID card carrying a personal quest.',
     dzh:'回应年轻人中流行的“NPC 心态”与自我价值感缺失的交互装置。作品以网络梗“地球 Online”的角色创建界面为框架，参与者在大屏前用手势设计属于自己的“面甲”；随后由基于 Gemini 的程序把截图转换为 3D 模型，参与者最终带走一张印有个人任务的 3D 打印主角身份卡。',
-    videos:[['Exhibition · YouTube','https://youtu.be/z7EUHCh-lFI'],['Exhibition · Vimeo','https://vimeo.com/1146352328']]}
+    links:[['Exhibition · YouTube','https://youtu.be/z7EUHCh-lFI'],['Exhibition · Vimeo','https://vimeo.com/1146352328']]}
 };
-const ORDER=Object.keys(PROJECTS);
+Object.assign(PROJECTS,{"sheep": {"more": 1, "en": "Letter of the Flying Sheep", "zh": "", "kind": ["Web game · Birthday gift", "网页游戏 · 生日礼物"], "tags": ["Web Game", "Narrative", "Personal"], "den": "A small browser game I made as a birthday present for my mom. Her name sounds like “flying sheep”, so the hero is a little sheep with wings. The five levels follow her life in order, from Shenzhen Middle School to Shenzhen University to Nanshan Science Park, and each scene is drawn from the real place. Ping-pong bats, a drawing board, and the cat and pigeons she once kept all appear along the way, in her favourite purple. The journey ends with a birthday letter.", "dzh": "这是我送给妈妈的生日礼物，一个小小的网页游戏。妈妈名字的谐音很像“flying sheep”，所以主角是一只会飞的小羊。五个关卡按她的成长顺序设计，从深中、深大到南山科技园，每个场景都参考了这些地方的样子；乒乓球、画板，还有她以前养过的猫和鸽子都藏在游戏里，整体用了她最喜欢的紫色。旅程的终点是一封生日信。", "imgs": ["assets/more/sheep-1.jpg", "assets/more/sheep-2.jpg", "assets/more/sheep-3.jpg", "assets/more/sheep-4.jpg", "assets/more/sheep-5.jpg", "assets/more/sheep-6.jpg"], "links": [["Play in browser", "#play-sheep", "▶"]], "badge": ["♡ For Mom", "♡ 献给妈妈"]}, "zero": {"more": 1, "en": "零时之塔", "zh": "", "kind": ["Team · TapTap Spotlight Jam 2026", "团队 · TapTap 聚光灯 Game Jam 2026"], "tags": ["Unreal Engine", "Card Combat", "Game Jam", "Team of 11"], "den": "A 21-day entry for the TapTap Spotlight Game Jam 2026, made by an 11-person team (For Dawn Studio) in Unreal Engine. Time has become unstable and different eras of the same place now overlap. Players are a witch who can interfere with time, fighting through floors that show the same place in different periods with a hand of skill cards. Released as a playable demo on TapTap.", "dzh": "TapTap 聚光灯 2026 年 21 天游戏创作挑战参赛作品，由 11 人团队（For Dawn Studio）使用虚幻引擎制作。世界的时间变得不再稳定，同一地点的不同时代重叠在一起。玩家扮演能干涉时间的魔女，用手中的技能卡牌，在“同一地点、不同时期”的楼层中一路向前。试玩 Demo 已在 TapTap 上线。", "imgs": ["assets/more/zero-1.jpg", "assets/more/zero-2.jpg", "assets/more/zero-3.jpg", "assets/more/zero-4.jpg", "assets/more/zero-5.jpg"], "links": [["TapTap", "https://www.taptap.cn/app/977535", "↗"]], "badge": null}, "who": {"more": 1, "en": "Who Am I?", "zh": "", "kind": ["Team · MA Games Design, LCC", "团队 · 伦敦传媒学院游戏设计硕士"], "tags": ["Environmental Narrative", "3D", "Team of 4", "Playtested ×3", "CN / EN / IT"], "den": "An environmental narrative game we made as a team of four for the Designing and Prototyping unit of the MA Games Design at LCC. You start as a baby animal with no idea what you are, and work it out from the world around you: tracks in the mud, gnawed stumps and a dam. Then you choose which of four grown-ups is your family. We ran three rounds of playtesting: v0.4 within the team, v0.6 in class and v0.7.4 with 23 players. The findings led us to add hints such as glows, light beams and golden light, and the latest round raised the opposite question: whether those hints now speak louder than the environment. One playthrough takes about five minutes, mostly with one button, in Chinese, English or Italian.", "dzh": "伦敦传媒学院（LCC）游戏设计硕士“设计与原型”课程的团队作品，一款 4 人合作完成的环境叙事游戏。玩家是一只不知道自己是什么的小动物，只能从环境中寻找答案：泥地上的脚印、被啃断的树桩和水坝；最后在四只成年动物中，选出哪一只是自己的家人。我们一共进行了三轮试玩测试：v0.4 团队内部、v0.6 课堂试玩、v0.7.4 共 23 位玩家。根据测试结果，我们加入了发光、光束、金色光线等提示；而最新一轮又提出了相反的问题：这些提示是否已经盖过了环境本身的表达。一次游玩约 5 分钟，基本只用一个按键，支持中文、英文和意大利语。", "imgs": ["assets/more/who-1.jpg", "assets/more/who-2.jpg", "assets/more/who-3.jpg", "assets/more/who-4.jpg", "assets/more/who-5.jpg", "assets/more/who-6.jpg", "assets/more/who-7.jpg", "assets/more/who-8.jpg"], "links": [["Watch intro video", "#watch", "▶"], ["Download for Mac", "#dl-mac", "↓"], ["Download for Windows", "#dl-win", "↓"]], "badge": null, "video": "assets/video/whoami-intro.mp4", "poster": "assets/more/who-cover.jpg", "note": ["Mac: the app is not notarised. If macOS blocks it the first time, go to System Settings › Privacy & Security and click “Open Anyway”. Controls: WASD to move, mouse to look, E to act.", "Mac：应用未经公证，首次打开若被拦截，请到 系统设置 › 隐私与安全性 点击“仍要打开”。操作：WASD 移动，鼠标转视角，E 互动。"]}, "oms": {"more": 1, "en": "One More Second", "zh": "", "kind": ["Team · GMTK Game Jam 2026", "团队 · GMTK Game Jam 2026"], "tags": ["Unity", "Puzzle", "Game Jam", "Team of 8"], "den": "Our GMTK Game Jam 2026 entry, made by a team of eight in Unity. A fire breaks out in a shopping mall. As a firefighter carrying magic pocket watches, you drag the watches onto objects to change their time, solve each room’s puzzle and save as many people as you can before your own countdown runs out. The images here are the cover, character art, the time-ability icons (rewind, slow down, speed up) and the floor backgrounds, taken from the game build.", "dzh": "GMTK Game Jam 2026 参赛作品，8 人团队用 Unity 完成。商场突发火灾，玩家扮演带着魔法怀表的消防员：把怀表拖到物体上改变它们的时间，解开每个房间的谜题，在自己的倒计时结束前救出尽可能多的人。下方图片包括封面、角色立绘、时间能力图标（倒流、减速、加速）以及各楼层场景背景，均取自游戏文件。", "imgs": ["assets/more/oms-1.jpg", "assets/more/oms-2.jpg", "assets/more/oms-3.jpg", "assets/more/oms-4.jpg", "assets/more/oms-5.jpg", "assets/more/oms-6.jpg", "assets/more/oms-7.jpg", "assets/more/oms-8.jpg"], "links": [["Play on itch.io", "https://morton-mao.itch.io/one-more-second", "↗"]], "badge": null}, "gold": {"more": 1, "en": "Hoooook", "zh": "", "kind": ["On Steam · Gold-miner × Roguelite", "已上架 Steam · 黄金矿工 × 肉鸽"], "tags": ["Roguelite", "Gold-miner", "Build Design", "Steam"], "den": "Hoooook is on Steam: a gold-miner game crossed with a roguelite. You swing a mechanical claw to grab gold, gems and items, upgrade the hand across five stats (speed, size, rotation, strength and reach), and dig deeper through themed layers such as mines, swamps and graveyards. The current build system is deep but hard to read, which makes the game harder to pick up. My next step is to split builds across characters: each character gets one clear leaning and becomes the physical rig that replaces the mine cart, chosen at the start of a run. The demo uses a single default character built around a combo build.", "dzh": "Hoooook 已上架 Steam，是“黄金矿工 + 肉鸽”的体验。玩家甩动机械爪抓取金矿、宝石和道具，从速度、尺寸、旋转、力量、抓取距离五个维度升级机械手，在矿洞、沼泽、墓地等不同主题的地层中向下挖掘。目前的流派设计很硬核、也比较隐晦，上手存在门槛；接下来我计划把流派拆分到具体角色上：每个角色有一个明确的倾向，角色具象化后就是取代矿车的那个实体，在开局时选择。目前的 Demo 相当于默认一个角色，主打连击流派。", "imgs": ["assets/more/gold-1.jpg", "assets/more/gold-2.jpg", "assets/more/gold-3.jpg", "assets/more/gold-4.jpg", "assets/more/gold-5.jpg"], "links": [], "badge": ["On Steam", "已上架 Steam"]}, "dream": {"more": 1, "en": "梦我", "zh": "", "kind": ["Team lead · 2D platformer", "团队组长 · 2D 平台跳跃"], "tags": ["Unity", "Team Lead", "Game Design", "Programming", "50-player Playtest"], "den": "A team project where I was team lead, responsible for game design and programming. It is a 2D platformer about self-discovery, grounded in Freud’s dream theory and personality structure and in Self-Determination Theory. Three acts map to combat (facing raw desire), platforming (finding balance in the real world) and puzzle mechanics (rethinking social norms). We playtested with 50 players and used their ratings and comments to tune difficulty.", "dzh": "团队项目，我担任组长，负责游戏策划与程序实现。这是一款关于自我探索的 2D 平台跳跃游戏，理论基础来自弗洛伊德的梦的解析、人格结构理论以及自我决定理论（SDT）。三个阶段分别对应战斗（面对原始冲动与欲望）、平台跳跃（在现实中寻找平衡）和机制解谜（对社会规范的反思与超越）。我们邀请 50 位玩家试玩，并根据评分与反馈调整难度。", "imgs": ["assets/more/dream-07.jpg", "assets/more/dream-08.jpg", "assets/more/dream-09.jpg", "assets/more/dream-10.jpg"], "links": [], "badge": null}, "xianjie": {"more": 1, "en": "仙界逍遥录", "zh": "", "kind": ["Solo · Roguelite", "个人项目 · 肉鸽"], "tags": ["Unity", "C#", "Roguelite", "Pacing Design"], "den": "A solo survivor-style roguelite set in a xianxia world. Building on the Vampire Survivors formula, I designed a pacing controller that reads the player’s state and cycles enemy spawns through build-up, peak and cool-down phases, so tension rises and falls in a designed rhythm instead of only growing.", "dzh": "一款仙侠题材的个人幸存者类肉鸽游戏。在《吸血鬼幸存者》玩法的基础上，我设计了“游戏节奏控制器”：根据玩家当前状态，让敌人生成在铺垫、高峰与冷却三个阶段之间循环，使紧张感按设计好的节奏起伏，而不只是一味递增。", "imgs": ["assets/more/xianjie-01.jpg", "assets/more/xianjie-02.jpg", "assets/more/xianjie-03.jpg"], "links": [], "badge": null}, "oasis": {"more": 1, "en": "Oasis", "zh": "", "kind": ["Solo · City-building sim", "个人项目 · 模拟经营"], "tags": ["Unity", "Simulation", "Serious Game"], "den": "A solo city-building and management sim about the gap between caring for the environment and actually acting on it. Players plan a city that has to balance growth, residents’ happiness and ecological health; each building and event shows the long-term cost of a choice, aiming to turn awareness into action for younger players.", "dzh": "一款个人制作的城市建设与模拟经营游戏，关注“有环保意识却难以付诸行动”的问题。玩家需要在城市发展、居民幸福感与生态健康之间取得平衡；每一座建筑和每一次事件都会呈现选择的长期代价，希望帮助年轻玩家把环保意识转化为行动。", "imgs": ["assets/more/oasis-04.jpg", "assets/more/oasis-05.jpg", "assets/more/oasis-06.jpg"], "links": [], "badge": null}, "prompt": {"more": 1, "en": "Daily Prompt Helper", "zh": "", "kind": ["UX study · Non-game", "UX 练习 · 非游戏"], "tags": ["UX Research", "UI Design", "Usability Testing"], "den": "My one non-game project, a UX practice piece where I did the research and the UI. It is a tool that helps Midjourney users write accurate prompts. From desk research and user interviews I designed a structured prompt builder (subject, style, camera, parameters), explanations for jargon, one-click translation and image-to-text. Usability tests led to changes such as moving the builder into a floating panel inside the gallery.", "dzh": "唯一一个和游戏无关的作品，是一次 UX 练习，我负责用户研究与 UI 设计。这是一个帮助 Midjourney 用户写出准确提示词的工具。基于桌面调研与用户访谈，我设计了结构化的提示词构建器（主体、风格、镜头、参数）、术语解释、一键翻译和图生文功能；可用性测试后，又把构建器改为画廊内的悬浮面板等。", "imgs": ["assets/more/prompt-0.jpg", "assets/more/prompt-1.jpg", "assets/more/prompt-2.jpg", "assets/more/prompt-3.jpg", "assets/more/prompt-4.jpg", "assets/more/prompt-5.jpg", "assets/more/prompt-6.jpg", "assets/more/prompt-7.jpg"], "links": [], "badge": null}});
+const groupKeys=k=>Object.keys(PROJECTS).filter(x=>!!PROJECTS[x].more===!!PROJECTS[k].more);
 const pm=document.getElementById('pm');let cur=null,lastFocus=null;
 const esc=t=>t.replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
 function openProject(k){
   const P=PROJECTS[k],zh=root.lang==='zh';cur=k;
-  document.getElementById('pmNum').textContent=(zh?'作品 ':'Project ')+P.n;
-  document.getElementById('pmTitle').innerHTML=esc(P.en)+'<small>'+esc(P.zh)+'</small>';
-  document.getElementById('pmDesc').textContent=zh?P.dzh:P.den;
+  document.getElementById('pmNum').textContent=P.more?(zh?P.kind[1]:P.kind[0]):(zh?'作品 ':'Project ')+P.n;
+  document.getElementById('pmTitle').innerHTML=esc(P.en)+(P.zh?'<small>'+esc(P.zh)+'</small>':'');
+  document.getElementById('pmDesc').innerHTML=(P.badge?'<span class="pm-badge">'+esc(zh?P.badge[1]:P.badge[0])+'</span>':'')+esc(zh?P.dzh:P.den);
   document.getElementById('pmTags').innerHTML=P.tags.map(t=>'<span class="tag">'+esc(t)+'</span>').join('');
-  document.getElementById('pmVideos').innerHTML=P.videos.map(([l,u])=>'<a class="btn" href="'+u+'" target="_blank" rel="noopener">▶ '+esc(l)+'</a>').join('');
-  document.getElementById('pmPages').innerHTML=P.pages.map((n,i)=>'<img src="assets/work/p'+String(n).padStart(2,'0')+'.jpg" alt="'+esc(P.en)+' — page '+(i+1)+'" loading="'+(i<1?'eager':'lazy')+'">').join('');
-  const i=ORDER.indexOf(k),pv=ORDER[(i+ORDER.length-1)%ORDER.length],nx=ORDER[(i+1)%ORDER.length];
+  const REL=GH_REPO?'https://github.com/'+GH_REPO+'/releases/latest':'';
+  document.getElementById('pmVideos').innerHTML=P.links.map(([l,u,ic])=>u==='#watch'?'<button class="btn solid" type="button" data-watch>▶ '+(zh?'观看介绍视频':'Watch intro video')+'</button>':u.startsWith('#dl')?(REL?'<a class="btn" href="'+REL+'" target="_blank" rel="noopener">'+ic+' '+esc(zh?(u==='#dl-mac'?'Mac 版下载':'Windows 版下载'):l)+'</a>':''):u.startsWith('#')?'<button class="btn solid" type="button" data-play="'+u.slice(1)+'">'+(ic||'▶')+' '+esc(zh&&u==='#play-sheep'?'在线试玩':l)+'</button>':'<a class="btn" href="'+u+'" target="_blank" rel="noopener">'+(ic||'▶')+' '+esc(l)+'</a>').join('');
+  document.getElementById('pmPages').innerHTML=P.imgs.length?P.imgs.map((src,i)=>'<img src="'+src+'" alt="'+esc(P.en)+' — image '+(i+1)+'" loading="'+(i<1?'eager':'lazy')+'">').join(''):'<p class="pm-empty">'+(zh?'截图与下载见 itch.io 页面。':'Screenshots and download are on the itch.io page.')+'</p>';
+  document.getElementById('pm').classList.toggle('pm-small',!!P.more);
+  document.getElementById('pmVideos').insertAdjacentHTML('afterend','');{const n=document.getElementById('pmNote');n.textContent=P.note?(zh?P.note[1]:P.note[0]):'';n.hidden=!(P.note&&REL)}document.getElementById('pmPages').classList.toggle('pm-shots',['sheep','zero','gold','oms','who'].includes(k));
+  const ORDER=groupKeys(k),i=ORDER.indexOf(k),pv=ORDER[(i+ORDER.length-1)%ORDER.length],nx=ORDER[(i+1)%ORDER.length];
   const lab=(a,b)=>'<span class="mono">'+a+'</span>'+esc(PROJECTS[b].en);
   document.getElementById('pmPrev').innerHTML=lab(zh?'← 上一个':'← Previous',pv);document.getElementById('pmPrev').onclick=()=>openProject(pv);
   document.getElementById('pmNext').innerHTML=lab(zh?'下一个 →':'Next →',nx);document.getElementById('pmNext').onclick=()=>openProject(nx);
@@ -706,13 +884,34 @@ function openProject(k){
   if(!pm.classList.contains('open')){lastFocus=document.activeElement;pm.classList.add('open');document.body.style.overflow='hidden';document.getElementById('pmClose').focus()}
   try{history.replaceState(null,'','#work/'+k)}catch(e){}
 }
-function closeProject(){pm.classList.remove('open');document.body.style.overflow='';cur=null;try{history.replaceState(null,'','#work')}catch(e){}if(lastFocus)lastFocus.focus()}
+function closeProject(){document.querySelectorAll('#pmPages video').forEach(v=>v.pause());pm.classList.remove('open');document.body.style.overflow='';cur=null;try{history.replaceState(null,'','#work')}catch(e){}if(lastFocus)lastFocus.focus()}
 document.querySelectorAll('[data-project]').forEach(b=>b.addEventListener('click',()=>openProject(b.dataset.project)));
 document.getElementById('pmClose').onclick=closeProject;
 addEventListener('keydown',e=>{if(!cur)return;if(e.key==='Escape')closeProject();
   if(e.key==='ArrowRight')document.getElementById('pmNext').click();if(e.key==='ArrowLeft')document.getElementById('pmPrev').click()});
 document.getElementById('langBtn').addEventListener('click',()=>{if(cur)openProject(cur)});
 {const m=location.hash.match(/^#work\/(\w+)/);if(m&&PROJECTS[m[1]]){try{sessionStorage.setItem('yw-seen','1')}catch(e){}document.getElementById('loader').classList.add('done');openProject(m[1])}}
+
+/* ---------- viewer: CV and playable game ---------- */
+const viewer=document.getElementById('viewer'),vBody=document.getElementById('viewerBody'),vAct=document.getElementById('viewerActions');let vLast=null;
+function openViewer(title,html,actions){vLast=document.activeElement;document.getElementById('viewerTitle').textContent=title;vBody.innerHTML=html;vAct.innerHTML=actions||'';viewer.hidden=false;document.body.style.overflow='hidden';document.getElementById('viewerClose').focus()}
+function closeViewer(){viewer.hidden=true;vBody.innerHTML='';if(!cur)document.body.style.overflow='';if(vLast)vLast.focus()}
+function openCV(){const zh=root.lang==='zh';
+  openViewer(zh?'简历':'CV','<img class="viewer-cv" src="assets/cv/cv-p01.jpg" alt="Yangfan Wen CV">',
+    '<a class="btn" data-dl href="Yangfan_Wen_CV.pdf" download="Yangfan_Wen_CV.pdf">'+(zh?'下载 PDF':'Download PDF')+'</a>')}
+function openVideo(P){const zh=root.lang==='zh';
+  openViewer(P.en+(zh?' · 介绍视频':' · Intro video'),'<video class="viewer-video" controls autoplay playsinline poster="'+P.poster+'" src="'+P.video+'"></video>','')}
+function openGame(){const zh=root.lang==='zh';
+  openViewer('Letter of the Flying Sheep','<iframe class="viewer-game" title="Letter of the Flying Sheep" allow="autoplay; fullscreen"></iframe>','');
+  const f=vBody.querySelector('iframe');
+  fetch('play/flying-sheep.html').then(r=>{if(!r.ok)throw 0;return r.text()}).then(t=>{f.srcdoc=t}).catch(()=>{f.src='play/flying-sheep.html'})}
+document.querySelectorAll('[data-cv]').forEach(b=>b.addEventListener('click',openCV));
+document.getElementById('pmVideos').addEventListener('click',e=>{if(e.target.closest('[data-play]'))openGame();if(e.target.closest('[data-watch]'))openVideo(PROJECTS[cur])});
+document.getElementById('viewerClose').onclick=closeViewer;
+addEventListener('keydown',e=>{if(e.key==='Escape'&&!viewer.hidden){e.stopImmediatePropagation();closeViewer()}},true);
+/* ---------- experience details toggle ---------- */
+document.querySelectorAll('.xp-toggle').forEach(b=>b.addEventListener('click',()=>{const box=b.previousElementSibling,open=box.classList.toggle('open');b.setAttribute('aria-expanded',open);
+  b.innerHTML=open?'<span data-en-only>Hide details</span><span data-zh-only>收起详情</span>':'<span data-en-only>Show details</span><span data-zh-only>展开详情</span>'}));
 </script>
 </body>
 </html>
